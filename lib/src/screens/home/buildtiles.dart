@@ -13,8 +13,8 @@ List<StaggeredGridTile> buildTiles() {
     child: Tile(
         icon: Icons.stacked_line_chart,
         heading: 'Estadisticas',
-        color: logoImageColor, //0xff3399fe,
-        backColor: mainColor,
+        color: mainColor, //0xff3399fe,
+        backColor: logoImageColor,
         route: ESTADISTICAS,
         params: const [
           ESTADISTICAS,
@@ -27,8 +27,8 @@ List<StaggeredGridTile> buildTiles() {
     child: Tile(
         icon: Icons.sync,
         heading: 'Sincronizar',
-        color: logoImageColor,
-        backColor: mainColor,
+        color: mainColor,
+        backColor: logoImageColor,
         route: SINCRONIZAR,
         params: const [
           SINCRONIZAR,
@@ -41,8 +41,8 @@ List<StaggeredGridTile> buildTiles() {
     child: Tile(
         icon: Icons.settings,
         heading: 'Ajustes',
-        color: logoImageColor, //0xff3399fe,
-        backColor: mainColor,
+        color: mainColor, //0xff3399fe,
+        backColor: logoImageColor,
         route: AJUSTES,
         params: const [
           AJUSTES,

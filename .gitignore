@@ -11,9 +11,7 @@
 migrate_working_dir/
 
 # IntelliJ related
-*.iml /veo muchos archivos hay cosa que deberian estar ignoradas?
-bueno espera 
-
+*.iml
 *.ipr
 *.iws
 .idea/

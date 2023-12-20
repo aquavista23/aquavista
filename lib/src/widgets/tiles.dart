@@ -23,7 +23,7 @@ class Tile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: backColor.withOpacity(0.3),
+      color: backColor.withOpacity(0.6),
       elevation: 6.0,
       shadowColor: const Color(0x802196F3),
       borderRadius: BorderRadius.circular(24.0),

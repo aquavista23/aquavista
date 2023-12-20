@@ -16,10 +16,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: mainColor,
-          title: textWithStroke(
-              text: 'Aquavista',
-              textColor: mainColor,
-              strokeColor: logoImageColor),
+          title: const Text('Aquavista'),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.exit_to_app),

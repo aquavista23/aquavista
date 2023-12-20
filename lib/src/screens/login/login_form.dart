@@ -68,7 +68,7 @@ class _LoginFormState extends State<LoginForm> {
         return Padding(
           padding: const EdgeInsets.all(20.0),
           child: Form(
-            child: ListView(
+            child: Column(
               children: <Widget>[
                 const Padding(
                     padding: EdgeInsets.symmetric(vertical: 20),

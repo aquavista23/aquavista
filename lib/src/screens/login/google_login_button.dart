@@ -19,7 +19,10 @@ class GoogleLoginButton extends StatelessWidget {
 
         BlocProvider.of<LoginBloc>(context).add(LoginWithGooglePressed());
       },
-      style: AuthButtonStyle(buttonColor: mainColor, borderRadius: 30.0),
+      style: AuthButtonStyle(
+          buttonColor: mainColor,
+          borderRadius: 30.0,
+          textStyle: TextStyle(color: logoImageColor, fontSize: 18.0)),
     );
   }
 }

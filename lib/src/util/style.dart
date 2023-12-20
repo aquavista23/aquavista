@@ -7,10 +7,10 @@ import 'elevatedbuttoshape.dart';
 
 //colors
 // Color mainColor = Colors.lightGreen;
-Color mainColor = const Color(0xffc3e3eb);
+Color mainColor = const Color(0xff012c8f);
 
 // Color clientColor = Color(0xff37A1EE); //Colors.lightBlue[800];
-Color logoImageColor = const Color(0xff3c4434);
+Color logoImageColor = const Color(0xffb0c9ff);
 
 Color visitColor = const Color(0xff369D34);
 
@@ -138,10 +138,11 @@ Widget textWithStroke(
 Widget buttonSetting(
   String text,
   IconData icon,
+  Function() onPress,
 ) =>
     ElevatedButton(
       style: buttonStyle(radium: 30.0),
-      onPressed: () {},
+      onPressed: onPress,
       child: ListTile(
           trailing: Icon(
             icon,

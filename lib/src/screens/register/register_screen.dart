@@ -21,10 +21,7 @@ class RegisterScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mainColor,
-        title: textWithStroke(
-            text: 'Registrar',
-            textColor: mainColor,
-            strokeColor: logoImageColor),
+        title: const Text('Registrar'),
       ),
       body: Container(
         decoration: const BoxDecoration(

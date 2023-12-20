@@ -19,8 +19,8 @@ class CreateAccountButton extends StatelessWidget {
     return TextButton(
       child: textWithStroke(
           text: 'Crear Cuenta',
-          textColor: mainColor,
-          strokeColor: Colors.blue,
+          textColor: logoImageColor,
+          strokeColor: mainColor,
           textSize: 16),
       onPressed: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
