@@ -1,6 +1,9 @@
 // import 'dart:html';
 
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:aquavista/src/functions/setting_functions.dart';
+import 'package:aquavista/src/screens/wifi_setting.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:aquavista/src/util/style.dart';
@@ -37,6 +40,8 @@ class _SettingState extends State<Setting> {
             buttonSetting('Agregar Dispositivo', Icons.add, () async {
               final connect = Connectivity();
               late ConnectivityResult result;
+              String ssid = '';
+              String bssid = '';
               // Platform messages may fail, so we use a try/catch PlatformException.
               try {
                 result = await connect.checkConnectivity();
@@ -44,17 +49,29 @@ class _SettingState extends State<Setting> {
                 print('Couldn\'t check connectivity status ${e.toString()}');
                 return;
               }
+              ssid = await getWifiName() ?? '';
+              bssid = await getWifiSSID() ?? '';
               print('???????????/ ${result.name}');
               if (true) {
-                print('>>>>>>>>>>>>> ${await getWifiName()}');
-                print('>>>>>>>>>>>>> ${await getWifiSSID()}');
-                print('>>>>>>>>>>>>> ${await getWifiSignalLevel()}');
-                print('>>>>>>>>>>>>> ${await getWifiIp()}');
+                print('>>>>>>>>>>>>> getWifiName: $ssid');
+                print('>>>>>>>>>>>>> getWifiSSID: $bssid');
+                print(
+                    '>>>>>>>>>>>>> getWifiSignalLevel: ${await getWifiSignalLevel()}');
+                print('>>>>>>>>>>>>> getWifiIp: ${await getWifiIp()}');
               }
-              // List<WifiNetwork?> lts = await getWifiList() ?? [];
-              // for (var v = 0; v < lts.length; v++) {
-              //   print('>>>>>>>>>>>>> ${lts[v]?.password}');
-              // }
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => WifiPage(ssid: ssid, bssid: bssid)),
+              );
+
+              // print(
+              //     '>>>>>>>>>>>>> testEsp(): ${testEsp(await getWifiName(), await getWifiSSID(), 'DURAN1995')}');
+              // // List<WifiNetwork?> lts = await getWifiList() ?? [];
+              // // for (var v = 0; v < lts.length; v++) {
+              // //   print('>>>>>>>>>>>>> ${lts[v]?.password}');
+              // // }
             }),
             const SizedBox(
               height: 10.0,
