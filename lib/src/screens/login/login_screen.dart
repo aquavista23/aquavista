@@ -11,13 +11,20 @@ import 'package:aquavista/src/screens/login/login_form.dart';
 import 'package:aquavista/src/bloc/login_bloc/bloc.dart';
 import 'package:aquavista/src/repository/user_repository.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   final UserRepository _userRepository;
 
   const LoginScreen({Key? key, required UserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository,
         super(key: key);
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  bool permisos = false;
 
   @override
   Widget build(BuildContext context) {
@@ -57,24 +64,27 @@ class LoginScreen extends StatelessWidget {
                         initialData: false,
                         builder:
                             (BuildContext context, AsyncSnapshot snapshot) {
+                          permisos = snapshot.data;
                           return Align(
                             alignment: Alignment.topLeft,
                             child: IconButton(
                                 tooltip: 'Estado de Permisos',
-                                icon: (snapshot.data)
+                                icon: (permisos)
                                     ? const Icon(
                                         Icons.check_circle_outline_sharp)
                                     : const Icon(Icons.do_disturb_alt_outlined),
-                                color:
-                                    (snapshot.data) ? Colors.green : Colors.red,
+                                color: (permisos) ? Colors.green : Colors.red,
                                 onPressed: () async {
-                                  if (snapshot.data) {
+                                  if (permisos) {
                                     snackBar(
                                       context: context,
                                       text: 'Permisos Otorgados',
                                     );
                                   } else {
-                                    await checkPermissions(context);
+                                    setState(() async {
+                                      permisos =
+                                          await checkPermissions(context);
+                                    });
                                   }
                                 }),
                           );
@@ -86,8 +96,9 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               BlocProvider<LoginBloc>(
-                create: (context) => LoginBloc(userRepository: _userRepository),
-                child: LoginForm(userRepository: _userRepository),
+                create: (context) =>
+                    LoginBloc(userRepository: widget._userRepository),
+                child: LoginForm(userRepository: widget._userRepository),
               ),
             ],
           ),

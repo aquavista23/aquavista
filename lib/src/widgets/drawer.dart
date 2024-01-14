@@ -1,5 +1,6 @@
 import 'package:aquavista/src/bloc/authentication_bloc/authentication_bloc.dart';
 import 'package:aquavista/src/bloc/authentication_bloc/authentication_event.dart';
+import 'package:aquavista/src/screens/statistics/plots_screens.dart';
 import 'package:aquavista/src/util/show_dialog.dart';
 import 'package:flutter/material.dart';
 
@@ -34,7 +35,12 @@ class MyDrawer extends StatelessWidget {
                 Icons.poll_outlined,
                 color: mainColor,
               ),
-              onTap: () async {}),
+              onTap: () async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const PlotsScreen()),
+                );
+              }),
           ListTile(
               title: Text(
                 'Sincronización',

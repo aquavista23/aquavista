@@ -1,9 +1,9 @@
-import 'package:aquavista/src/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:aquavista/src/util/style.dart';
+import 'package:aquavista/src/widgets/drawer.dart';
 import 'package:aquavista/src/util/show_dialog.dart';
 import 'package:aquavista/src/bloc/authentication_bloc/bloc.dart';
 
