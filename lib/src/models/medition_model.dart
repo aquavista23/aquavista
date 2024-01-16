@@ -1,7 +1,7 @@
 class MeditionData {
   String? id;
-  String? dato1;
-  String? dato2;
+  double? dato1;
+  double? dato2;
   DateTime? fecha;
 
   MeditionData({
@@ -13,16 +13,16 @@ class MeditionData {
 
   MeditionData.fromJson(Map<dynamic, dynamic> json) {
     id = json["id"] ?? '';
-    dato1 = json["dato1"] ?? '';
-    dato2 = json["dato2"] ?? '';
-    fecha = json["fecha"];
+    dato1 = double.tryParse(json["dato1"].toString()) ?? 0;
+    dato2 = double.tryParse(json["dato2"].toString()) ?? 0;
+    fecha = DateTime.tryParse(json["fecha"]);
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       "id": id,
-      "dato1": dato1,
-      "dato2": dato2,
+      "dato1": dato1.toString(),
+      "dato2": dato2.toString(),
       "fecha": fecha.toString()
     };
   }
