@@ -1,12 +1,17 @@
 // ignore_for_file: override_on_non_overriding_member, unnecessary_null_comparison, invalid_use_of_visible_for_testing_member
 
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:aquavista/src/util/validators.dart';
 import 'package:aquavista/src/bloc/login_bloc/bloc.dart';
 import 'package:aquavista/src/repository/user_repository.dart';
+import 'package:aquavista/src/functions/db_script_function.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final UserRepository _userRepository;
@@ -77,6 +82,21 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(LoginState.loading());
     try {
       await _userRepository.signInWithCredentials(email, password);
+      User? currentUser = FirebaseAuth.instance.currentUser;
+      CollectionReference userColection =
+          FirebaseFirestore.instance.collection('usuarios');
+      userColection
+          .doc(currentUser!.uid)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) async {
+        String? token = await FirebaseMessaging.instance.getToken();
+        if (documentSnapshot.exists) {
+          updateUser(userColection, documentSnapshot, currentUser, token);
+        } else {
+          createUser(currentUser.uid, email, token);
+        }
+      });
+
       return LoginState.success();
     } catch (_) {
       return LoginState.failure();
