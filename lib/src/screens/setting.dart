@@ -3,7 +3,8 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:aquavista/src/functions/setting_functions.dart';
-import 'package:aquavista/src/screens/wifi_setting.dart';
+import 'package:aquavista/src/screens/options/share_devices.dart';
+import 'package:aquavista/src/screens/options/wifi_setting.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:aquavista/src/util/style.dart';
@@ -51,14 +52,14 @@ class _SettingState extends State<Setting> {
               }
               ssid = await getWifiName() ?? '';
               bssid = await getWifiSSID() ?? '';
-              print('???????????/ ${result.name}');
-              if (true) {
-                print('>>>>>>>>>>>>> getWifiName: $ssid');
-                print('>>>>>>>>>>>>> getWifiSSID: $bssid');
-                print(
-                    '>>>>>>>>>>>>> getWifiSignalLevel: ${await getWifiSignalLevel()}');
-                print('>>>>>>>>>>>>> getWifiIp: ${await getWifiIp()}');
-              }
+              // print('???????????/ ${result.name}');
+              // if (true) {
+              //   print('>>>>>>>>>>>>> getWifiName: $ssid');
+              //   print('>>>>>>>>>>>>> getWifiSSID: $bssid');
+              //   print(
+              //       '>>>>>>>>>>>>> getWifiSignalLevel: ${await getWifiSignalLevel()}');
+              //   print('>>>>>>>>>>>>> getWifiIp: ${await getWifiIp()}');
+              // }
 
               Navigator.push(
                 context,
@@ -72,6 +73,15 @@ class _SettingState extends State<Setting> {
               // // for (var v = 0; v < lts.length; v++) {
               // //   print('>>>>>>>>>>>>> ${lts[v]?.password}');
               // // }
+            }),
+            const SizedBox(
+              height: 10.0,
+            ),
+            buttonSetting('Compartir', Icons.share_outlined, () async {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ShareDevices()),
+              );
             }),
             const SizedBox(
               height: 10.0,

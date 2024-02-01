@@ -85,15 +85,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       User? currentUser = FirebaseAuth.instance.currentUser;
       CollectionReference userColection =
           FirebaseFirestore.instance.collection('usuarios');
-      userColection
+      await userColection
           .doc(currentUser!.uid)
           .get()
           .then((DocumentSnapshot documentSnapshot) async {
         String? token = await FirebaseMessaging.instance.getToken();
         if (documentSnapshot.exists) {
-          updateUser(userColection, documentSnapshot, currentUser, token);
+          await updateUser(userColection, documentSnapshot, currentUser, token);
+          await updateShare(documentSnapshot, userColection, currentUser);
         } else {
-          createUser(currentUser.uid, email, token);
+          await createUser(currentUser.uid, email, token);
         }
       });
 
