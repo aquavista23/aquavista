@@ -151,3 +151,14 @@ Widget buttonSetting(
           title: textWithStroke(
               text: text, textColor: mainColor, strokeColor: logoImageColor)),
     );
+
+Widget cardWithPadding(Widget child) {
+  return Card(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(15.0),
+    ),
+    clipBehavior: Clip.antiAlias,
+    margin: const EdgeInsets.all(10),
+    child: Padding(padding: const EdgeInsets.all(15.0), child: child),
+  );
+}

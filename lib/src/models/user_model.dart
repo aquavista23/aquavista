@@ -1,4 +1,5 @@
 class UserData {
+  String? uID;
   String? email;
   String? token;
   DateTime? fechaInsersion;
@@ -14,6 +15,7 @@ class UserData {
   });
 
   UserData.fromJson(Map<dynamic, dynamic> json) {
+    uID = json["uid"] ?? '';
     email = json["email"] ?? '';
     token = json["token"] ?? '';
     fechaInsersion = DateTime.tryParse(json["fecha_insercion"].toString());
@@ -23,6 +25,7 @@ class UserData {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      "uid": uID,
       "email": email,
       "token": token,
       "fecha_insercion": fechaInsersion.toString(),
