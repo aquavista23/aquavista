@@ -1,5 +1,7 @@
 class UserData {
   String? uID;
+  String? nombre;
+  String? apellido;
   String? email;
   String? token;
   DateTime? fechaInsersion;
@@ -7,6 +9,9 @@ class UserData {
   Map? compartir;
 
   UserData({
+    this.uID,
+    this.nombre,
+    this.apellido,
     this.email,
     this.token,
     this.fechaInsersion,
@@ -16,6 +21,8 @@ class UserData {
 
   UserData.fromJson(Map<dynamic, dynamic> json) {
     uID = json["uid"] ?? '';
+    nombre = json["nombre"] ?? '';
+    apellido = json["apellido"] ?? '';
     email = json["email"] ?? '';
     token = json["token"] ?? '';
     fechaInsersion = DateTime.tryParse(json["fecha_insercion"].toString());
@@ -26,6 +33,8 @@ class UserData {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       "uid": uID,
+      "nombre": nombre,
+      "apellido": apellido,
       "email": email,
       "token": token,
       "fecha_insercion": fechaInsersion.toString(),

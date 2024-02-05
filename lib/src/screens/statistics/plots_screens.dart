@@ -42,9 +42,6 @@ class _PlotsScreenState extends State<PlotsScreen> {
           auxMeditionShow.add(meditionList[i]);
         }
       }
-      for (var i = 0; i < auxMeditionShow.length; i++) {
-        print(auxMeditionShow[i].toMap());
-      }
       auxMeditionShow.sort((a, b) {
         return a.fecha!.compareTo(b.fecha!);
       });
@@ -381,14 +378,12 @@ class _PlotsScreenState extends State<PlotsScreen> {
 
   LineChartBarData get lineChartBarData2_3 {
     List<FlSpot>? spots = [];
-    print('>>>>>>>>>>>>>>>>>>>>>> antes del for');
+
     for (var i = 0; i < meditionShow.length; i++) {
       if (meditionShow[i].dato1 != null && meditionShow[i].fecha != null) {
         DateTime fecha = meditionShow[i].fecha!;
         double dato1 = meditionShow[i].dato1!;
-        print('>>>>>>>>>>>>>> $dato1');
-        print(
-            '????????????? ${double.parse((fecha.hour.toDouble() + (fecha.minute.toDouble() / 60)).toString())}');
+
         spots.add(FlSpot(
           double.parse(
               ((fecha.hour.toDouble() + (fecha.minute.toDouble() / 60)) / 2)

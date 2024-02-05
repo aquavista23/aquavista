@@ -16,13 +16,16 @@ class RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<RegisterForm> {
   // Dos variables
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _fNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
   late RegisterBloc _registerBloc;
-
+  bool validateName = false;
+  bool validateFName = false;
   bool get isPopulated =>
       _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
 
@@ -34,6 +37,8 @@ class _RegisterFormState extends State<RegisterForm> {
   void initState() {
     super.initState();
     _registerBloc = BlocProvider.of<RegisterBloc>(context);
+    _nameController.addListener(_onNameChanged);
+    _fNameController.addListener(_onFNameChanged);
     _emailController.addListener(_onEmailChanged);
     _passwordController.addListener(_onPasswordChanged);
     _confirmPasswordController.addListener(_onConfirmPasswordChanged);
@@ -41,6 +46,8 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   void dispose() {
+    _nameController.dispose();
+    _fNameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
@@ -76,8 +83,62 @@ class _RegisterFormState extends State<RegisterForm> {
             child: ListView(
               children: <Widget>[
                 const SizedBox(
-                  height: 150.0,
+                  height: 50.0,
                 ),
+                // Un textForm para name
+                TextFormField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(
+                    icon: Icon(Icons.email),
+                    labelText: 'Nombre',
+                  ),
+                  keyboardType: TextInputType.name,
+                  autocorrect: false,
+                  autovalidateMode: AutovalidateMode.always,
+                  validator: (_) {
+                    return validateName ? 'Nombre Invalido' : null;
+                  },
+                  onChanged: (value) {
+                    bool aux = false;
+                    if (value.isNotEmpty) {
+                      aux = false;
+                    } else {
+                      aux = true;
+                    }
+
+                    setState(() {
+                      validateName = aux;
+                    });
+                  },
+                ),
+
+                // Un textForm para fName
+                TextFormField(
+                  controller: _fNameController,
+                  decoration: const InputDecoration(
+                    icon: Icon(Icons.email),
+                    labelText: 'Apellido',
+                  ),
+                  keyboardType: TextInputType.name,
+                  autocorrect: false,
+                  autovalidateMode: AutovalidateMode.always,
+                  validator: (_) {
+                    return validateFName ? 'Apellido Invalido' : null;
+                  },
+                  onChanged: (value) {
+                    bool aux = false;
+                    if (value.isNotEmpty) {
+                      aux = false;
+                    } else {
+                      aux = true;
+                    }
+
+                    setState(() {
+                      validateFName = aux;
+                    });
+                  },
+                ),
+
                 // Un textForm para email
                 TextFormField(
                   controller: _emailController,
@@ -134,10 +195,36 @@ class _RegisterFormState extends State<RegisterForm> {
                 InitialButton(
                     text: 'Registrar',
                     onPressed: () {
-                      if (isRegisterButtonEnabled(state) &&
-                          _confirmPasswordController.text ==
+                      if (_nameController.text.isNotEmpty) {
+                        if (_fNameController.text.isNotEmpty) {
+                          if (_confirmPasswordController.text ==
                               _passwordController.text) {
-                        _onFormSubmitted();
+                            if (isRegisterButtonEnabled(state)) {
+                              _onFormSubmitted();
+                            }
+                          } else {
+                            snackBarAlert(
+                                context: context,
+                                text: 'Contraseñas no coinsiden',
+                                color: Colors.red);
+                          }
+                        } else {
+                          snackBarAlert(
+                              context: context,
+                              text: 'Debe llenar campo Apellido',
+                              color: Colors.red);
+                          setState(() {
+                            validateFName = true;
+                          });
+                        }
+                      } else {
+                        snackBarAlert(
+                            context: context,
+                            text: 'Debe llenar campo Nombre',
+                            color: Colors.red);
+                        setState(() {
+                          validateName = true;
+                        });
                       }
                     })
               ],
@@ -146,6 +233,14 @@ class _RegisterFormState extends State<RegisterForm> {
         );
       },
     ));
+  }
+
+  void _onNameChanged() {
+    _registerBloc.add(NameChanged(name: _nameController.text));
+  }
+
+  void _onFNameChanged() {
+    _registerBloc.add(FNameChanged(fName: _fNameController.text));
   }
 
   void _onEmailChanged() {
@@ -163,6 +258,10 @@ class _RegisterFormState extends State<RegisterForm> {
 
   void _onFormSubmitted() {
     _registerBloc.add(Submitted(
-        email: _emailController.text, password: _passwordController.text));
+      name: _nameController.text,
+      fName: _fNameController.text,
+      email: _emailController.text,
+      password: _passwordController.text,
+    ));
   }
 }

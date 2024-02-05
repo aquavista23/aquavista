@@ -47,7 +47,15 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     RegisterEvent event,
     Emitter<RegisterState> emit,
   ) async {
-    // Tres casos
+    // Cinco casos
+    // Si el evento es NameChanged
+    if (event is NameChanged) {
+      emit(await _mapNameChangedToState(event.name));
+    }
+    // Si el evento es FNameChanged
+    if (event is FNameChanged) {
+      emit(await _mapFNameChangedToState(event.fName));
+    }
     // Si el evento es EmailChanged
     if (event is EmailChanged) {
       emit(await _mapEmailChangedToState(event.email));
@@ -58,8 +66,17 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     }
     // Si el evento es Submitted
     if (event is Submitted) {
-      emit(await _mapFormSubmittedToState(event.email, event.password));
+      emit(await _mapFormSubmittedToState(
+          event.name, event.fName, event.email, event.password));
     }
+  }
+
+  Future<RegisterState> _mapNameChangedToState(String name) async {
+    return state.update(isEmailValid: Validators.isValidEmail(name));
+  }
+
+  Future<RegisterState> _mapFNameChangedToState(String fName) async {
+    return state.update(isEmailValid: Validators.isValidEmail(fName));
   }
 
   Future<RegisterState> _mapEmailChangedToState(String email) async {
@@ -71,13 +88,13 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   }
 
   Future<RegisterState> _mapFormSubmittedToState(
-      String email, String password) async {
+      String name, String fName, String email, String password) async {
     emit(RegisterState.loading());
     try {
       await _userRepository.signUp(email, password);
       User? currentUser = FirebaseAuth.instance.currentUser;
       final token = await FirebaseMessaging.instance.getToken();
-      createUser(currentUser!.uid, email, token);
+      createUser(currentUser!.uid, email, token, name, fName);
       return RegisterState.success();
     } catch (_) {
       return RegisterState.failure();

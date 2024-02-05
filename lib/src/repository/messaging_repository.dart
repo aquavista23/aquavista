@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class MessagingRepository {
@@ -81,7 +82,9 @@ class MessagingRepository {
 }
 
 Future<void> handleBackgroundMessaging(RemoteMessage message) async {
-  print('TITULO: ${message.notification?.title}');
-  print('CUERPO: ${message.notification?.body}');
-  print('PLAYLOAD: ${message.data}');
+  if (kDebugMode) {
+    print('TITULO: ${message.notification?.title}');
+    print('CUERPO: ${message.notification?.body}');
+    print('PLAYLOAD: ${message.data}');
+  }
 }
