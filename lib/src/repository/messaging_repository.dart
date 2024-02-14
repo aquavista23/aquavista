@@ -28,7 +28,7 @@ class MessagingRepository {
   Future<void> initNotifications() async {
     await _firebaseMessaging.requestPermission();
     final token = await _firebaseMessaging.getToken();
-    print('TOKEN: $token');
+    debugPrint('TOKEN: $token');
     initPushNotifications();
   }
 
@@ -83,8 +83,8 @@ class MessagingRepository {
 
 Future<void> handleBackgroundMessaging(RemoteMessage message) async {
   if (kDebugMode) {
-    print('TITULO: ${message.notification?.title}');
-    print('CUERPO: ${message.notification?.body}');
-    print('PLAYLOAD: ${message.data}');
+    debugPrint('TITULO: ${message.notification?.title}');
+    debugPrint('CUERPO: ${message.notification?.body}');
+    debugPrint('PLAYLOAD: ${message.data}');
   }
 }

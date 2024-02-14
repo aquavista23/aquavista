@@ -116,7 +116,7 @@ class TaskRouteState extends State<TaskRoute> {
     );
   }
 
-  final Set<ESPTouchResult> _results = Set();
+  final Set<ESPTouchResult> _results = {};
 
   @override
   Widget build(BuildContext context) {

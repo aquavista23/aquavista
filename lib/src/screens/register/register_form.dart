@@ -89,7 +89,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 TextFormField(
                   controller: _nameController,
                   decoration: const InputDecoration(
-                    icon: Icon(Icons.email),
+                    icon: Icon(Icons.contacts_rounded),
                     labelText: 'Nombre',
                   ),
                   keyboardType: TextInputType.name,
@@ -116,7 +116,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 TextFormField(
                   controller: _fNameController,
                   decoration: const InputDecoration(
-                    icon: Icon(Icons.email),
+                    icon: Icon(Icons.contacts_rounded),
                     labelText: 'Apellido',
                   ),
                   keyboardType: TextInputType.name,

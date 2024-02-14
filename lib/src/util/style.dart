@@ -3,8 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'elevatedbuttoshape.dart';
-
 //colors
 // Color mainColor = Colors.lightGreen;
 Color mainColor = const Color(0xff012c8f);
@@ -106,6 +104,15 @@ class CustomTheme extends Theme {
         );
 }
 
+ButtonStyle buttonStyle({required double radium, Color? color}) {
+  return ElevatedButton.styleFrom(
+    primary: color ?? mainColor,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(radium),
+    ),
+  );
+}
+
 Widget textWithStroke(
         {required String text,
         required Color textColor,
@@ -135,13 +142,13 @@ Widget textWithStroke(
       ],
     );
 
-Widget buttonSetting(
-  String text,
-  IconData icon,
-  Function() onPress,
-) =>
+Widget buttonSetting(String text, IconData icon, Function() onPress,
+        {double? radium,
+        Color? colorText,
+        Color? colorStroke,
+        Color? colorButton}) =>
     ElevatedButton(
-      style: buttonStyle(radium: 30.0),
+      style: buttonStyle(radium: radium ?? 30.0, color: colorButton),
       onPressed: onPress,
       child: ListTile(
           trailing: Icon(
@@ -149,7 +156,9 @@ Widget buttonSetting(
             color: logoImageColor,
           ),
           title: textWithStroke(
-              text: text, textColor: mainColor, strokeColor: logoImageColor)),
+              text: text,
+              textColor: colorText ?? mainColor,
+              strokeColor: colorStroke ?? logoImageColor)),
     );
 
 Widget cardWithPadding(Widget child) {
@@ -160,5 +169,94 @@ Widget cardWithPadding(Widget child) {
     clipBehavior: Clip.antiAlias,
     margin: const EdgeInsets.all(10),
     child: Padding(padding: const EdgeInsets.all(15.0), child: child),
+  );
+}
+
+Widget textContainer(String text, title) {
+  return Container(
+    height: 45.0,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(10),
+      boxShadow: [
+        BoxShadow(color: mainColor, blurRadius: 1, spreadRadius: 0),
+        const BoxShadow(color: Colors.white, blurRadius: 10, spreadRadius: 5),
+      ],
+    ),
+    child: Column(
+      children: [
+        Text(
+          title,
+          textAlign: TextAlign.left,
+          style: TextStyle(color: mainColor.withOpacity(0.7)),
+        ),
+        const Divider(
+          height: 3.0,
+        ),
+        Center(
+          child: Text(
+            text,
+            textAlign: TextAlign.justify,
+            style: TextStyle(
+                color: mainColor, fontSize: 20, fontWeight: FontWeight.w500),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget containerWithList(
+    {required BuildContext context,
+    required List<Widget> childrens,
+    required String tittle}) {
+  List<Widget> children = [
+    Text(
+      tittle,
+      style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+    ),
+    const SizedBox(
+      height: 35,
+    ),
+  ];
+  children.addAll(childrens);
+  return Container(
+    padding: const EdgeInsets.only(left: 16, top: 25, right: 16),
+    child: GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: ListView(
+        children: children,
+      ),
+    ),
+  );
+}
+
+Widget rowOfButtons(
+    {required BuildContext context,
+    required Function() onPressed,
+    Color? colorSave}) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      ElevatedButton(
+        style: buttonStyle(radium: 15, color: Colors.red),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: const Text("Cancelar",
+            style: TextStyle(
+                fontSize: 14, letterSpacing: 2.2, color: Colors.black)),
+      ),
+      ElevatedButton(
+        style: buttonStyle(radium: 15, color: colorSave),
+        onPressed: onPressed,
+        child: const Text(
+          "Guardar",
+          style:
+              TextStyle(fontSize: 14, letterSpacing: 2.2, color: Colors.white),
+        ),
+      )
+    ],
   );
 }

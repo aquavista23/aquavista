@@ -67,30 +67,7 @@ class _ShareDevicesState extends State<ShareDevices> {
                               if (mapShared.containsKey(listDelete[i])) {
                                 mapShared.remove(listDelete[i]);
                               }
-                              // if (auxSharedWith.containsKey(listDelete[i])) {
-                              //   auxSharedWith.remove(listDelete[i]);
-                              // }
                             }
-
-                            // for (var v = 0; v < listDelete.length; v++) {
-                            //   auxValues!.indexWhere((item) {
-                            //     print('<<<<<<<<<<< $item');
-                            //     if (item == listDelete[v]) {
-                            //       auxValues.remove(listDelete[v]);
-                            //     }
-
-                            //     return false;
-                            //   });
-                            // }
-                            // // mapShared[result!.uID] = result!.token;
-                            // print('>>>>>>>>>>>>>>>  user: $auxValues');
-                            // print(' >>>>>>>>>>>>>>>>>> listDelete $listDelete');
-                            // print(
-                            //     ' >>>>>>>>>>>>>>>>>> sharedWith $auxSharedWith');
-                            // for (var v = 0; v < listUserShared.length; v++) {
-                            //   print(
-                            //       ' >>>>>>>>>>>>>>>>>> listUserShared ${listUserShared[v].toMap()}');
-                            // }
                             setState(() {
                               deleteSelect = false;
                             });
@@ -98,12 +75,11 @@ class _ShareDevicesState extends State<ShareDevices> {
                                 .doc(currentUser!.uid)
                                 .update({'compartir': mapShared});
                           } catch (e) {
-                            print(
+                            debugPrint(
                                 '??????????????//DeleteShared ${e.toString()}');
                           }
                         }
                       });
-                      // if (mounted) Navigator.pop(context);
                     },
                   )
                 : Container()
@@ -114,10 +90,6 @@ class _ShareDevicesState extends State<ShareDevices> {
           tooltip: 'Compartir Dispositivo',
           child: const Icon(Icons.group_add_outlined),
           onPressed: () async {
-            // for (var i = 0; i < listUserShared.length; i++) {
-            //   print(
-            //       '?????????????????????? list User: ${listUserShared[i].email}');
-            // }
             await bottomSheet(context, listUserShared);
           },
         ),
@@ -275,6 +247,7 @@ class _ShareDevicesState extends State<ShareDevices> {
         text,
         style: TextStyle(color: mainColor, fontSize: size),
       );
+
   Future<void> bottomSheet(BuildContext context, List<UserData> emails) async {
     TextEditingController resultController = TextEditingController();
     UserData? result;
@@ -406,7 +379,7 @@ class _ShareDevicesState extends State<ShareDevices> {
                                         .doc(currentUser!.uid)
                                         .update({'compartir': mapShared});
                                   } catch (e) {
-                                    print(
+                                    debugPrint(
                                         '??????????????//updateShare ${e.toString()}');
                                   }
                                 }
