@@ -3,19 +3,16 @@
 import 'package:bloc/bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:aquavista/src/util/validators.dart';
 import 'package:aquavista/src/bloc/forgot_bloc/bloc.dart';
 import 'package:aquavista/src/repository/user_repository.dart';
-import 'package:aquavista/src/functions/db_script_function.dart';
 
 class ForgotBloc extends Bloc<ForgotEvent, ForgotState> {
-  final UserRepository _userRepository;
+  // final UserRepository _userRepository;
 
   ForgotBloc({required UserRepository userRepository})
       : assert(userRepository != null),
-        _userRepository = userRepository,
         super(ForgotState.empty()) {
     on<ForgotEvent>((event, emit) async {
       await mapEventToState(event, emit);

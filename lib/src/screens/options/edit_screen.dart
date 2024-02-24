@@ -20,7 +20,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   CollectionReference userColection =
       FirebaseFirestore.instance.collection('usuarios');
   final refDatabase = FirebaseDatabase.instance;
-  final user = FirebaseAuth.instance.currentUser;
+  // final user = FirebaseAuth.instance.currentUser;
 
   TextEditingController _nameController = TextEditingController();
   TextEditingController _fNameController = TextEditingController();
@@ -301,14 +301,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                     _newPassController.text)) {
                               if (_newPassController.text.length > 5) {
                                 try {
-                                  if (user != null) {
+                                  if (currentUser != null) {
                                     final cred = EmailAuthProvider.credential(
-                                        email: user!.email!,
+                                        email: currentUser!.email!,
                                         password: _oldPassController.text);
-                                    user!
+                                    currentUser!
                                         .reauthenticateWithCredential(cred)
                                         .then((value) {
-                                      user!
+                                      currentUser!
                                           .updatePassword(
                                               _newPassController.text)
                                           .then((_) {
@@ -329,7 +329,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                   } else {
                                     debugPrint("password hasnt been changed");
                                     auxValidateOldPass = true;
-                                    // No user is signed in.
+                                    // No currentUser is signed in.
                                   }
                                 } catch (e) {
                                   toast = 'Error al Cambiar contraseña';

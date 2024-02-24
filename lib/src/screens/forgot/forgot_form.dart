@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aquavista/src/util/snackbar.dart';
 import 'package:aquavista/src/util/initial_button.dart';
 import 'package:aquavista/src/bloc/forgot_bloc/bloc.dart';
-import 'package:aquavista/src/bloc/authentication_bloc/bloc.dart';
 
 class ForgotForm extends StatefulWidget {
   const ForgotForm({Key? key}) : super(key: key);
