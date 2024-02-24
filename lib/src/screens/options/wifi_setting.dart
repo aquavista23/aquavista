@@ -121,8 +121,6 @@ class _WifiPageState extends State<WifiPage> {
                   ),
                   ElevatedButton(
                       onPressed: () async {
-                        print(password.text);
-                        print(deviceCount.text);
                         Set<ESPTouchResult> result = await Navigator.of(context)
                             .push(MaterialPageRoute(
                                 builder: (context) => TaskRoute(
@@ -131,7 +129,6 @@ class _WifiPageState extends State<WifiPage> {
                                     password.text,
                                     deviceCount.text,
                                     isBroad)));
-                        print("result : $result");
                       },
                       style: ButtonStyle(
                           backgroundColor:

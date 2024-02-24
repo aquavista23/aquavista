@@ -1,14 +1,15 @@
 // import 'dart:html';
-
 // ignore_for_file: use_build_context_synchronously
-
-import 'package:aquavista/src/functions/setting_functions.dart';
-import 'package:aquavista/src/screens/options/share_devices.dart';
-import 'package:aquavista/src/screens/options/wifi_setting.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:aquavista/src/util/style.dart';
 import 'package:flutter/services.dart';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
+
+import 'package:aquavista/src/util/style.dart';
+import 'package:aquavista/src/functions/setting_functions.dart';
+import 'package:aquavista/src/screens/options/wifi_setting.dart';
+import 'package:aquavista/src/screens/options/share_devices.dart';
+import 'package:aquavista/src/screens/options/perfil_screen.dart';
 
 class Setting extends StatefulWidget {
   const Setting({Key? key}) : super(key: key);
@@ -34,7 +35,12 @@ class _SettingState extends State<Setting> {
             const SizedBox(
               height: 10.0,
             ),
-            buttonSetting('Editar Perfil', Icons.person, () async {}),
+            buttonSetting('Editar Perfil', Icons.person, () async {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfilePage()),
+              );
+            }),
             const SizedBox(
               height: 10.0,
             ),
@@ -47,7 +53,8 @@ class _SettingState extends State<Setting> {
               try {
                 result = await connect.checkConnectivity();
               } on PlatformException catch (e) {
-                print('Couldn\'t check connectivity status ${e.toString()}');
+                debugPrint(
+                    'Couldn\'t check connectivity status ${e.toString()}');
                 return;
               }
               ssid = await getWifiName() ?? '';
@@ -83,10 +90,6 @@ class _SettingState extends State<Setting> {
                 MaterialPageRoute(builder: (context) => const ShareDevices()),
               );
             }),
-            const SizedBox(
-              height: 10.0,
-            ),
-            buttonSetting('Reestablecer', Icons.restart_alt, () async {})
           ],
         ));
   }

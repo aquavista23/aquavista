@@ -94,7 +94,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           await updateUser(userColection, documentSnapshot, currentUser, token);
           await updateShare(documentSnapshot, userColection, currentUser);
         } else {
-          await createUser(currentUser.uid, email, token);
+          await createUser(currentUser.uid, email, token, null, null);
         }
       });
 

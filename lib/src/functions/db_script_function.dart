@@ -4,6 +4,12 @@ import 'package:aquavista/src/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+/////////////////////////////////////////////////////////////////////////
+///NOMBRE ORIGINAL: updateUser
+///TIPO: Funcion
+///DETALLE:
+/*Actualiza la data del usuario para mantener el token actualizado*/
+/////////////////////////////////////////////////////////////////////////
 Future<bool> updateUser(CollectionReference userColection,
     DocumentSnapshot documentSnapshot, User currentUser, String? token) async {
   try {
@@ -21,7 +27,15 @@ Future<bool> updateUser(CollectionReference userColection,
     return false;
   }
 }
+/*===============================|updateUser|=====================================*/
 
+/////////////////////////////////////////////////////////////////////////
+///NOMBRE ORIGINAL: updateShare
+///TIPO: Funcion
+///DETALLE:
+/*actualiza el campo compartir dentro de la data del usuario para mantener
+los tokes de los usuarios compartidos actualizados*/
+/////////////////////////////////////////////////////////////////////////
 Future<bool> updateShare(DocumentSnapshot documentSnapshot,
     CollectionReference userColection, User currentUser) async {
   List<String> listID = [];
@@ -46,11 +60,21 @@ Future<bool> updateShare(DocumentSnapshot documentSnapshot,
     return false;
   }
 }
+/*===============================|updateShare|=====================================*/
 
-Future<bool> createUser(String id, String email, String? token) async {
+/////////////////////////////////////////////////////////////////////////
+///NOMBRE ORIGINAL: createUser
+///TIPO: Funcion
+///DETALLE:
+/*Crea el usuario en caso de que no exista*/
+/////////////////////////////////////////////////////////////////////////
+Future<bool> createUser(String id, String email, String? token, String? nombre,
+    String? apellido) async {
   try {
     UserData? newUser = UserData.fromJson({
       'uid': id,
+      'nombre': nombre ?? email.substring(0, email.indexOf('@')),
+      'apellido': apellido ?? email.substring(0, email.indexOf('@')),
       'email': email,
       'token': token,
       'fecha_insercion': DateTime.now(),
@@ -67,12 +91,4 @@ Future<bool> createUser(String id, String email, String? token) async {
     return false;
   }
 }
-
-Future<Map> updateShared(CollectionReference userColection, String id) async {
-  try {
-    return {};
-  } catch (e) {
-    print('??????????????//updateShared ${e.toString()}');
-    return {};
-  }
-}
+/*===============================|createUser|=====================================*/
