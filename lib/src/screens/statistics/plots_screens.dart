@@ -1,3 +1,4 @@
+import 'package:aquavista/src/functions/plots_functions.dart';
 import 'package:flutter/material.dart';
 
 import 'package:fl_chart/fl_chart.dart';
@@ -19,15 +20,17 @@ class _PlotsScreenState extends State<PlotsScreen> {
   List<MeditionData> meditionList = [];
   List<MeditionData> meditionShow = [];
   bool isShowingMainData = false;
+  DateTime filterDay = DateTime.now();
+  DateTime dayFilter = DateTime.now();
 
   @override
   void initState() {
-    retrieveMeditionData();
+    retrieveMeditionData(dayFilter);
     isShowingMainData = true;
     super.initState();
   }
 
-  void retrieveMeditionData() {
+  void retrieveMeditionData(DateTime dia) {
     List<MeditionData> auxMeditionShow = [];
 
     dbRef.orderByChild("id").equalTo("2").onValue.listen((data) {
@@ -38,7 +41,7 @@ class _PlotsScreenState extends State<PlotsScreen> {
       });
 
       for (var i = 0; i < meditionList.length; i++) {
-        if (meditionList[i].fecha!.difference(DateTime.now()).inDays == 0) {
+        if (convertDate(meditionList[i].fecha!).difference(dia).inDays == 0) {
           auxMeditionShow.add(meditionList[i]);
         }
       }
@@ -47,6 +50,7 @@ class _PlotsScreenState extends State<PlotsScreen> {
       });
       setState(() {
         meditionShow = auxMeditionShow;
+        filterDay = dia;
       });
     });
   }
@@ -57,6 +61,26 @@ class _PlotsScreenState extends State<PlotsScreen> {
         appBar: AppBar(
           backgroundColor: mainColor,
           title: const Text('Estadisticas'),
+          actions: [
+            Theme(
+              data: calendarTheme(context, mainColor),
+              child: Builder(builder: (contextTM) {
+                return IconButton(
+                    icon: const Icon(Icons.calendar_today_rounded),
+                    color: (filterDay.year == DateTime.now().year &&
+                            filterDay.month == DateTime.now().month &&
+                            filterDay.day == DateTime.now().day)
+                        ? Colors.white
+                        : Colors.red[900],
+                    onPressed: () async {
+                      dayFilter = await daySelectedCalendar(
+                              context: contextTM, daySelected: filterDay) ??
+                          DateTime.now();
+                      retrieveMeditionData(dayFilter);
+                    });
+              }),
+            )
+          ],
         ),
         body: Builder(builder: (context) {
           return AspectRatio(
