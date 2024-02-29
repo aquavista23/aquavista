@@ -37,6 +37,7 @@ final DateFormat formatDateDb = DateFormat('yyyy-MM-dd');
 final DateFormat formatDateSeqDb = DateFormat('yyMMdd');
 final DateFormat formatDateAPI = DateFormat('dd/MM/yyyy/hh:mm:ss');
 final DateFormat formatDateSync = DateFormat('dd-MM-yyyy hh:mm:ss');
+final DateFormat formatDateHome = DateFormat('dd-MM-yy hh:mm:ss');
 
 //numberformat
 final NumberFormat formatNumber = NumberFormat('#,###,###,###.##');

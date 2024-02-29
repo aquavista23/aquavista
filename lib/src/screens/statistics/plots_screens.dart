@@ -1,3 +1,4 @@
+import 'package:aquavista/src/functions/plots_functions.dart';
 import 'package:flutter/material.dart';
 
 import 'package:fl_chart/fl_chart.dart';
@@ -19,15 +20,17 @@ class _PlotsScreenState extends State<PlotsScreen> {
   List<MeditionData> meditionList = [];
   List<MeditionData> meditionShow = [];
   bool isShowingMainData = false;
+  DateTime filterDay = DateTime.now();
+  DateTime dayFilter = DateTime.now();
 
   @override
   void initState() {
-    retrieveMeditionData();
+    retrieveMeditionData(dayFilter);
     isShowingMainData = true;
     super.initState();
   }
 
-  void retrieveMeditionData() {
+  void retrieveMeditionData(DateTime dia) {
     List<MeditionData> auxMeditionShow = [];
 
     dbRef.orderByChild("id").equalTo("2").onValue.listen((data) {
@@ -38,7 +41,7 @@ class _PlotsScreenState extends State<PlotsScreen> {
       });
 
       for (var i = 0; i < meditionList.length; i++) {
-        if (meditionList[i].fecha!.difference(DateTime.now()).inDays == 0) {
+        if (convertDate(meditionList[i].fecha!).difference(dia).inDays == 0) {
           auxMeditionShow.add(meditionList[i]);
         }
       }
@@ -47,6 +50,7 @@ class _PlotsScreenState extends State<PlotsScreen> {
       });
       setState(() {
         meditionShow = auxMeditionShow;
+        filterDay = dia;
       });
     });
   }
@@ -57,6 +61,26 @@ class _PlotsScreenState extends State<PlotsScreen> {
         appBar: AppBar(
           backgroundColor: mainColor,
           title: const Text('Estadisticas'),
+          actions: [
+            Theme(
+              data: calendarTheme(context, mainColor),
+              child: Builder(builder: (contextTM) {
+                return IconButton(
+                    icon: const Icon(Icons.calendar_today_rounded),
+                    color: (filterDay.year == DateTime.now().year &&
+                            filterDay.month == DateTime.now().month &&
+                            filterDay.day == DateTime.now().day)
+                        ? Colors.white
+                        : Colors.red[900],
+                    onPressed: () async {
+                      dayFilter = await daySelectedCalendar(
+                              context: contextTM, daySelected: filterDay) ??
+                          DateTime.now();
+                      retrieveMeditionData(dayFilter);
+                    });
+              }),
+            )
+          ],
         ),
         body: Builder(builder: (context) {
           return AspectRatio(
@@ -110,7 +134,7 @@ class _PlotsScreenState extends State<PlotsScreen> {
         lineTouchData: LineTouchData(enabled: false),
         titlesData: titlesData2,
         borderData: borderData,
-        lineBarsData: [lineChartBarData2_3],
+        lineBarsData: [lineChartBarData2_3, lineChartBarData2_4],
         minX: 0,
         maxX: 12,
         maxY: 10,
@@ -283,23 +307,23 @@ class _PlotsScreenState extends State<PlotsScreen> {
         border: Border.all(color: const Color(0xff37434d)),
       );
 
-  // LineChartBarData get lineChartBarData1_1 => LineChartBarData(
-  //       isCurved: true,
-  //       color: Colors.green,
-  //       barWidth: 8,
-  //       isStrokeCapRound: true,
-  //       dotData: FlDotData(show: false),
-  //       belowBarData: BarAreaData(show: false),
-  //       spots: const [
-  //         FlSpot(1, 1),
-  //         FlSpot(3, 1.5),
-  //         FlSpot(5, 1.4),
-  //         FlSpot(7, 3.4),
-  //         FlSpot(10, 2),
-  //         FlSpot(12, 2.2),
-  //         FlSpot(13, 1.8),
-  //       ],
-  //     );
+  LineChartBarData get lineChartBarData1_1 => LineChartBarData(
+        isCurved: true,
+        color: Colors.green,
+        barWidth: 8,
+        isStrokeCapRound: true,
+        dotData: FlDotData(show: false),
+        belowBarData: BarAreaData(show: false),
+        spots: const [
+          FlSpot(1, 1),
+          FlSpot(3, 1.5),
+          FlSpot(5, 1.4),
+          FlSpot(7, 3.4),
+          FlSpot(10, 2),
+          FlSpot(12, 2.2),
+          FlSpot(13, 1.8),
+        ],
+      );
 
   // LineChartBarData get lineChartBarData1_2 => LineChartBarData(
   //       isCurved: true,
@@ -376,19 +400,48 @@ class _PlotsScreenState extends State<PlotsScreen> {
   //       ],
   //     );
 
-  LineChartBarData get lineChartBarData2_3 {
+  LineChartBarData get lineChartBarData2_4 {
     List<FlSpot>? spots = [];
 
     for (var i = 0; i < meditionShow.length; i++) {
-      if (meditionShow[i].dato1 != null && meditionShow[i].fecha != null) {
+      if (meditionShow[i].flow != null && meditionShow[i].fecha != null) {
         DateTime fecha = meditionShow[i].fecha!;
-        double dato1 = meditionShow[i].dato1!;
+        double flow = meditionShow[i].flow!;
 
         spots.add(FlSpot(
           double.parse(
               ((fecha.hour.toDouble() + (fecha.minute.toDouble() / 60)) / 2)
                   .toString()),
-          dato1 / 10,
+          flow / 10,
+        ));
+      }
+    }
+
+    return LineChartBarData(
+      isCurved: true,
+      curveSmoothness: 0,
+      color: Colors.green.withOpacity(0.5),
+      barWidth: 2,
+      isStrokeCapRound: true,
+      dotData: FlDotData(show: true),
+      belowBarData: BarAreaData(show: false),
+      spots: spots,
+    );
+  }
+
+  LineChartBarData get lineChartBarData2_3 {
+    List<FlSpot>? spots = [];
+
+    for (var i = 0; i < meditionShow.length; i++) {
+      if (meditionShow[i].turbidity != null && meditionShow[i].fecha != null) {
+        DateTime fecha = meditionShow[i].fecha!;
+        double turbidity = meditionShow[i].turbidity!;
+
+        spots.add(FlSpot(
+          double.parse(
+              ((fecha.hour.toDouble() + (fecha.minute.toDouble() / 60)) / 2)
+                  .toString()),
+          turbidity / 10,
         ));
       }
     }
