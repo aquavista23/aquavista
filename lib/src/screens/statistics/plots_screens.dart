@@ -134,7 +134,7 @@ class _PlotsScreenState extends State<PlotsScreen> {
         lineTouchData: LineTouchData(enabled: false),
         titlesData: titlesData2,
         borderData: borderData,
-        lineBarsData: [lineChartBarData2_3],
+        lineBarsData: [lineChartBarData2_3, lineChartBarData2_4],
         minX: 0,
         maxX: 12,
         maxY: 10,
@@ -307,23 +307,23 @@ class _PlotsScreenState extends State<PlotsScreen> {
         border: Border.all(color: const Color(0xff37434d)),
       );
 
-  // LineChartBarData get lineChartBarData1_1 => LineChartBarData(
-  //       isCurved: true,
-  //       color: Colors.green,
-  //       barWidth: 8,
-  //       isStrokeCapRound: true,
-  //       dotData: FlDotData(show: false),
-  //       belowBarData: BarAreaData(show: false),
-  //       spots: const [
-  //         FlSpot(1, 1),
-  //         FlSpot(3, 1.5),
-  //         FlSpot(5, 1.4),
-  //         FlSpot(7, 3.4),
-  //         FlSpot(10, 2),
-  //         FlSpot(12, 2.2),
-  //         FlSpot(13, 1.8),
-  //       ],
-  //     );
+  LineChartBarData get lineChartBarData1_1 => LineChartBarData(
+        isCurved: true,
+        color: Colors.green,
+        barWidth: 8,
+        isStrokeCapRound: true,
+        dotData: FlDotData(show: false),
+        belowBarData: BarAreaData(show: false),
+        spots: const [
+          FlSpot(1, 1),
+          FlSpot(3, 1.5),
+          FlSpot(5, 1.4),
+          FlSpot(7, 3.4),
+          FlSpot(10, 2),
+          FlSpot(12, 2.2),
+          FlSpot(13, 1.8),
+        ],
+      );
 
   // LineChartBarData get lineChartBarData1_2 => LineChartBarData(
   //       isCurved: true,
@@ -399,6 +399,35 @@ class _PlotsScreenState extends State<PlotsScreen> {
   //         FlSpot(13, 3.9),
   //       ],
   //     );
+
+  LineChartBarData get lineChartBarData2_4 {
+    List<FlSpot>? spots = [];
+
+    for (var i = 0; i < meditionShow.length; i++) {
+      if (meditionShow[i].flow != null && meditionShow[i].fecha != null) {
+        DateTime fecha = meditionShow[i].fecha!;
+        double flow = meditionShow[i].flow!;
+
+        spots.add(FlSpot(
+          double.parse(
+              ((fecha.hour.toDouble() + (fecha.minute.toDouble() / 60)) / 2)
+                  .toString()),
+          flow / 10,
+        ));
+      }
+    }
+
+    return LineChartBarData(
+      isCurved: true,
+      curveSmoothness: 0,
+      color: Colors.green.withOpacity(0.5),
+      barWidth: 2,
+      isStrokeCapRound: true,
+      dotData: FlDotData(show: true),
+      belowBarData: BarAreaData(show: false),
+      spots: spots,
+    );
+  }
 
   LineChartBarData get lineChartBarData2_3 {
     List<FlSpot>? spots = [];
