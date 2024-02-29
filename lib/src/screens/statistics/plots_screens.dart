@@ -404,15 +404,15 @@ class _PlotsScreenState extends State<PlotsScreen> {
     List<FlSpot>? spots = [];
 
     for (var i = 0; i < meditionShow.length; i++) {
-      if (meditionShow[i].dato1 != null && meditionShow[i].fecha != null) {
+      if (meditionShow[i].turbidity != null && meditionShow[i].fecha != null) {
         DateTime fecha = meditionShow[i].fecha!;
-        double dato1 = meditionShow[i].dato1!;
+        double turbidity = meditionShow[i].turbidity!;
 
         spots.add(FlSpot(
           double.parse(
               ((fecha.hour.toDouble() + (fecha.minute.toDouble() / 60)) / 2)
                   .toString()),
-          dato1 / 10,
+          turbidity / 10,
         ));
       }
     }

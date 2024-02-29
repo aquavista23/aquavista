@@ -49,6 +49,7 @@ dependencies:
   google_sign_in: ^6.0.2                                          #autentificacion con google de firebase
   cloud_firestore: ^4.4.5                                        #base de datos para usuarios
   connectivity_plus: ^2.3.9                                       #confirmacion de conexion a wifi
+  percent_indicator: ^4.2.3
   network_info_plus: ^2.1.4+1                                     #informacion de la red utilizada
   firebase_database: ^10.0.16                                     #obtener data de la base de datos
   permission_handler: ^11.0.0                                     #solisitar permisos
