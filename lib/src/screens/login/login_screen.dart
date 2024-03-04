@@ -34,73 +34,76 @@ class _LoginScreenState extends State<LoginScreen> {
         title: const Text('Login'),
       ),
       resizeToAvoidBottomInset: false,
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assets/water.png"),
-              fit: BoxFit.scaleDown,
-              opacity: 0.25,
-              alignment: Alignment.bottomCenter),
-        ),
+      body: SingleChildScrollView(
         child: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-                image: AssetImage("assets/water_top.png"),
+                image: AssetImage("assets/water.png"),
                 fit: BoxFit.scaleDown,
-                opacity: 0.2,
-                alignment: Alignment.topCenter),
+                opacity: 0.25,
+                alignment: Alignment.bottomCenter),
           ),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 20, 5, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width - 100,
-                      child: FutureBuilder(
-                        future: checkPermissions(context),
-                        initialData: false,
-                        builder:
-                            (BuildContext context, AsyncSnapshot snapshot) {
-                          permisos = snapshot.data;
-                          return Align(
-                            alignment: Alignment.topLeft,
-                            child: IconButton(
-                                tooltip: 'Estado de Permisos',
-                                icon: (permisos)
-                                    ? const Icon(
-                                        Icons.check_circle_outline_sharp)
-                                    : const Icon(Icons.do_disturb_alt_outlined),
-                                color: (permisos) ? Colors.green : Colors.red,
-                                onPressed: () async {
-                                  if (permisos) {
-                                    snackBar(
-                                      context: context,
-                                      text: 'Permisos Otorgados',
-                                    );
-                                  } else {
-                                    setState(() async {
-                                      permisos =
-                                          await checkPermissions(context);
-                                    });
-                                  }
-                                }),
-                          );
-                        },
+          child: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assets/water_top.png"),
+                  fit: BoxFit.scaleDown,
+                  opacity: 0.2,
+                  alignment: Alignment.topCenter),
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 20, 5, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width - 100,
+                        child: FutureBuilder(
+                          future: checkPermissions(context),
+                          initialData: false,
+                          builder:
+                              (BuildContext context, AsyncSnapshot snapshot) {
+                            permisos = snapshot.data;
+                            return Align(
+                              alignment: Alignment.topLeft,
+                              child: IconButton(
+                                  tooltip: 'Estado de Permisos',
+                                  icon: (permisos)
+                                      ? const Icon(
+                                          Icons.check_circle_outline_sharp)
+                                      : const Icon(
+                                          Icons.do_disturb_alt_outlined),
+                                  color: (permisos) ? Colors.green : Colors.red,
+                                  onPressed: () async {
+                                    if (permisos) {
+                                      snackBar(
+                                        context: context,
+                                        text: 'Permisos Otorgados',
+                                      );
+                                    } else {
+                                      setState(() async {
+                                        permisos =
+                                            await checkPermissions(context);
+                                      });
+                                    }
+                                  }),
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                    Container()
-                  ],
+                      Container()
+                    ],
+                  ),
                 ),
-              ),
-              BlocProvider<LoginBloc>(
-                create: (context) =>
-                    LoginBloc(userRepository: widget._userRepository),
-                child: LoginForm(userRepository: widget._userRepository),
-              ),
-            ],
+                BlocProvider<LoginBloc>(
+                  create: (context) =>
+                      LoginBloc(userRepository: widget._userRepository),
+                  child: LoginForm(userRepository: widget._userRepository),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -1,5 +1,6 @@
 // import 'dart:html';
 // ignore_for_file: use_build_context_synchronously
+import 'package:aquavista/src/util/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -52,6 +53,7 @@ class _SettingState extends State<Setting> {
               // Platform messages may fail, so we use a try/catch PlatformException.
               try {
                 result = await connect.checkConnectivity();
+                snackBar(context: context, text: result.name);
               } on PlatformException catch (e) {
                 debugPrint(
                     'Couldn\'t check connectivity status ${e.toString()}');

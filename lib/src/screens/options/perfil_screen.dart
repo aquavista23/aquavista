@@ -179,7 +179,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
                             if (valid) {
                               bool p = await confirmPass(context, 'Confirmar');
-                              print('PPPPPPPPPPPPPPPPPPPPPPPPPPPP $p');
                               if (p) {
                                 Navigator.pushNamedAndRemoveUntil(context, '/',
                                     (Route<dynamic> route) => false);

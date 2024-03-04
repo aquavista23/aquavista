@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_unnecessary_containers
+
 import 'package:aquavista/src/util/snackbar.dart';
 import 'package:flutter/material.dart';
 
@@ -210,7 +212,7 @@ class _ShareDevicesState extends State<ShareDevices> {
     Map<String, bool> auxShareWith = sharedWith;
     return (ind < values.length)
         ? cardWithPadding(
-            Row(
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -393,7 +395,7 @@ class _ShareDevicesState extends State<ShareDevices> {
                 body: Container(
                     child: (result != null)
                         ? cardWithPadding(
-                            Row(
+                            child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [

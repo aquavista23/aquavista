@@ -58,6 +58,7 @@ class _PlotsScreenState extends State<PlotsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: mainColor,
         appBar: AppBar(
           backgroundColor: mainColor,
           title: const Text('Estadisticas'),
@@ -83,35 +84,66 @@ class _PlotsScreenState extends State<PlotsScreen> {
           ],
         ),
         body: Builder(builder: (context) {
-          return AspectRatio(
-            aspectRatio: 1.20,
-            child: Padding(
-              padding: const EdgeInsets.only(
-                right: 18,
-                left: 12,
-                top: 24,
-                bottom: 12,
-              ),
-              child: SizedBox(
-                height: 450,
-                child: (isShowingMainData)
-                    ? LineChart(
-                        sampleData2,
-                        swapAnimationDuration:
-                            const Duration(milliseconds: 250),
-                      )
-                    : Center(
-                        child: CircularProgressIndicator(
-                          backgroundColor: mainColor,
-                        ),
-                      ),
-              ),
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 5,
+                ),
+                // const Text('Turbidad'),
+                cardWithPadding(
+                  sizePad: 3,
+                  sizeMar: 3,
+                  color: mainColor.withOpacity(0.8),
+                  child: aspecWithPadding(
+                    child: SizedBox(
+                      height: 400,
+                      child: (isShowingMainData)
+                          ? LineChart(
+                              graphicData(0, filterDay),
+                              swapAnimationDuration:
+                                  const Duration(milliseconds: 250),
+                            )
+                          : Center(
+                              child: CircularProgressIndicator(
+                                backgroundColor: mainColor,
+                              ),
+                            ),
+                    ),
+                  ),
+                ),
+                const Divider(
+                  height: 5,
+                ),
+                // const Text('Flujo'),
+                cardWithPadding(
+                  sizePad: 3,
+                  sizeMar: 3,
+                  color: mainColor.withOpacity(0.8),
+                  child: aspecWithPadding(
+                    child: SizedBox(
+                      height: 500,
+                      child: (isShowingMainData)
+                          ? LineChart(
+                              graphicData(1, filterDay),
+                              swapAnimationDuration:
+                                  const Duration(milliseconds: 250),
+                            )
+                          : Center(
+                              child: CircularProgressIndicator(
+                                backgroundColor: mainColor,
+                              ),
+                            ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           );
         }));
   }
 
-  LineChartData get sampleData2 => LineChartData(
+  LineChartData graphicData(int id, DateTime filterDay) => LineChartData(
         gridData: FlGridData(
           show: true,
           drawHorizontalLine: true,
@@ -120,21 +152,46 @@ class _PlotsScreenState extends State<PlotsScreen> {
           verticalInterval: 1,
           getDrawingHorizontalLine: (value) {
             return FlLine(
-              color: Colors.grey,
+              color: Colors.white10,
               strokeWidth: 1,
             );
           },
           getDrawingVerticalLine: (value) {
             return FlLine(
-              color: Colors.grey,
+              color: Colors.white10,
               strokeWidth: 1,
             );
           },
         ),
-        lineTouchData: LineTouchData(enabled: false),
-        titlesData: titlesData2,
+        lineTouchData: LineTouchData(
+          enabled: true,
+          touchTooltipData: LineTouchTooltipData(
+            getTooltipItems: (value) {
+              return value
+                  .map((e) => LineTooltipItem(
+                      "${(e.y * 10).toStringAsFixed(2)} \n ${doubleToTime(e.x)}",
+                      TextStyle(color: mainColor)))
+                  .toList();
+            },
+            tooltipBgColor: Colors.grey.withOpacity(0.8),
+          ),
+          touchCallback: ((p0, p1) {
+            if (p1 != null) {
+              print('?????????????????? ${p1.lineBarSpots![0].x}');
+            }
+            // if (p0 != null) {
+            //   print('>>>>>>>>>>>>>>>> ${p0.}');
+            // }
+          }),
+        ),
+        titlesData: titlesData2(
+            (id == 0) ? '{%} Turbidad' : '{%} Flujo',
+            (id == 0)
+                ? 'Turbidad a la fecha ${formatDate.format(filterDay)}'
+                : 'Flujo  a la fecha ${formatDate.format(filterDay)}'),
         borderData: borderData,
-        lineBarsData: [lineChartBarData2_3, lineChartBarData2_4],
+        lineBarsData: (id == 0) ? [lineChartBarData2_3] : [lineChartBarData2_4],
+        // showingTooltipIndicators: ,
         minX: 0,
         maxX: 12,
         maxY: 10,
@@ -145,9 +202,14 @@ class _PlotsScreenState extends State<PlotsScreen> {
   //       enabled: false,
   //     );
 
-  FlTitlesData get titlesData2 => FlTitlesData(
+  FlTitlesData titlesData2(String titleData, String titleHeader) =>
+      FlTitlesData(
         show: true,
         bottomTitles: AxisTitles(
+          axisNameWidget: const Text(
+            'Horas',
+            style: TextStyle(color: Colors.white),
+          ),
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 30,
@@ -156,25 +218,28 @@ class _PlotsScreenState extends State<PlotsScreen> {
           ),
         ),
         leftTitles: AxisTitles(
+          axisNameWidget: Text(
+            titleData,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.white),
+          ),
           sideTitles: SideTitles(
             showTitles: true,
             getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
+            reservedSize: 30,
             interval: 1,
           ),
         ),
-        // bottomTitles: AxisTitles(
-        //   sideTitles: bottomTitles,
-        // ),
         rightTitles: AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
         topTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        // leftTitles: AxisTitles(
-        //   sideTitles: leftTitles(),
-        // ),
+            sideTitles: SideTitles(showTitles: false),
+            axisNameWidget: Text(
+              titleHeader,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.white),
+            )),
       );
 
   // List<LineChartBarData> get lineBarsData2 => [
@@ -183,117 +248,12 @@ class _PlotsScreenState extends State<PlotsScreen> {
   //       lineChartBarData2_3
   //     ];
 
-  Widget leftTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 14,
-    );
-    String text;
-    switch (value.toInt()) {
-      case 0:
-        text = 'Tbd';
-        break;
-      case 1:
-        text = '10';
-        break;
-      case 2:
-        text = '20';
-        break;
-      case 3:
-        text = '30';
-        break;
-      case 4:
-        text = '40';
-        break;
-      case 5:
-        text = '50';
-        break;
-      case 6:
-        text = '60';
-        break;
-      case 7:
-        text = '70';
-        break;
-      case 8:
-        text = '80';
-        break;
-      case 9:
-        text = '90';
-        break;
-      case 10:
-        text = '100';
-        break;
-      default:
-        return Container();
-    }
-
-    return Text(text, style: style, textAlign: TextAlign.center);
-  }
-
   SideTitles leftTitles() => SideTitles(
         getTitlesWidget: leftTitleWidgets,
         showTitles: true,
         interval: 1,
         reservedSize: 40,
       );
-
-  Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 16,
-    );
-    Widget text;
-    switch (value.toInt()) {
-      case 0:
-        text = const Text('Hr', style: style);
-        break;
-      case 1:
-        text = const Text('2', style: style);
-        break;
-      case 2:
-        text = const Text('4', style: style);
-        break;
-      case 3:
-        text = const Text('6', style: style);
-        break;
-      case 4:
-        text = const Text('8', style: style);
-        break;
-      case 5:
-        text = const Text('10', style: style);
-        break;
-      case 6:
-        text = const Text('12', style: style);
-        break;
-      case 7:
-        text = const Text('14', style: style);
-        break;
-      case 8:
-        text = const Text('16', style: style);
-        break;
-      case 9:
-        text = const Text('18', style: style);
-        break;
-      case 10:
-        text = const Text('20', style: style);
-        break;
-      case 11:
-        text = const Text('22', style: style);
-        break;
-      case 12:
-        text = const Text('24', style: style);
-        break;
-      default:
-        text = const Text('');
-        break;
-    }
-
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      space: 10,
-      child: text,
-    );
-  }
 
   SideTitles get bottomTitles => SideTitles(
         showTitles: true,
@@ -304,7 +264,7 @@ class _PlotsScreenState extends State<PlotsScreen> {
 
   FlBorderData get borderData => FlBorderData(
         show: true,
-        border: Border.all(color: const Color(0xff37434d)),
+        border: Border.all(color: Colors.white),
       );
 
   LineChartBarData get lineChartBarData1_1 => LineChartBarData(
@@ -345,21 +305,21 @@ class _PlotsScreenState extends State<PlotsScreen> {
   //       ],
   //     );
 
-  LineChartBarData get lineChartBarData1_3 => LineChartBarData(
-        isCurved: true,
-        color: Colors.cyan,
-        barWidth: 8,
-        isStrokeCapRound: true,
-        dotData: FlDotData(show: false),
-        belowBarData: BarAreaData(show: false),
-        spots: const [
-          FlSpot(1, 2.8),
-          FlSpot(3, 1.9),
-          FlSpot(6, 3),
-          FlSpot(9, 1.3),
-          FlSpot(11.5, 2.5),
-        ],
-      );
+  // LineChartBarData get lineChartBarData1_3 => LineChartBarData(
+  //       isCurved: true,
+  //       color: Colors.cyan,
+  //       barWidth: 8,
+  //       isStrokeCapRound: true,
+  //       dotData: FlDotData(show: false),
+  //       belowBarData: BarAreaData(show: false),
+  //       spots: const [
+  //         FlSpot(1, 2.8),
+  //         FlSpot(3, 1.9),
+  //         FlSpot(6, 3),
+  //         FlSpot(9, 1.3),
+  //         FlSpot(11.5, 2.5),
+  //       ],
+  //     );
 
   // LineChartBarData get lineChartBarData2_1 => LineChartBarData(
   //       isCurved: true,
@@ -420,8 +380,8 @@ class _PlotsScreenState extends State<PlotsScreen> {
     return LineChartBarData(
       isCurved: true,
       curveSmoothness: 0,
-      color: Colors.green.withOpacity(0.5),
-      barWidth: 2,
+      color: Colors.green.withOpacity(0.8),
+      barWidth: 5,
       isStrokeCapRound: true,
       dotData: FlDotData(show: true),
       belowBarData: BarAreaData(show: false),
@@ -448,9 +408,9 @@ class _PlotsScreenState extends State<PlotsScreen> {
 
     return LineChartBarData(
       isCurved: true,
-      curveSmoothness: 0,
-      color: Colors.cyan.withOpacity(0.5),
-      barWidth: 2,
+      curveSmoothness: 0.1,
+      color: Colors.cyan.withOpacity(0.8),
+      barWidth: 5,
       isStrokeCapRound: true,
       dotData: FlDotData(show: true),
       belowBarData: BarAreaData(show: false),

@@ -21,7 +21,7 @@ class ForgotScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mainColor,
-        title: const Text('Registrar'),
+        title: const Text('Restablecer Contraseña'),
       ),
       body: Container(
         decoration: const BoxDecoration(
