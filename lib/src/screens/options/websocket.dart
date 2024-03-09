@@ -11,7 +11,7 @@ class WebSocketTest extends StatefulWidget {
 
 class _WebSocketTestState extends State<WebSocketTest> {
   final channel = WebSocketChannel.connect(
-    Uri.parse('192.168.4.1'),
+    Uri.parse('http://192.168.4.1'),
   );
   @override
   Widget build(BuildContext context) {

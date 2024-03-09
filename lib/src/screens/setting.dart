@@ -1,5 +1,6 @@
 // import 'dart:html';
 // ignore_for_file: use_build_context_synchronously
+import 'package:aquavista/src/screens/options/websocket.dart';
 import 'package:aquavista/src/util/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -72,8 +73,7 @@ class _SettingState extends State<Setting> {
 
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => WifiPage(ssid: ssid, bssid: bssid)),
+                MaterialPageRoute(builder: (context) => const WebSocketTest()),
               );
 
               // print(

@@ -1,4 +1,6 @@
 import 'package:aquavista/src/functions/plots_functions.dart';
+import 'package:aquavista/src/models/user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:fl_chart/fl_chart.dart';
@@ -9,7 +11,8 @@ import 'package:aquavista/src/util/constantes.dart';
 import 'package:aquavista/src/models/medition_model.dart';
 
 class PlotsScreen extends StatefulWidget {
-  const PlotsScreen({Key? key}) : super(key: key);
+  final UserData? userShared;
+  const PlotsScreen({Key? key, this.userShared}) : super(key: key);
 
   @override
   State<PlotsScreen> createState() => _PlotsScreenState();
@@ -17,6 +20,7 @@ class PlotsScreen extends StatefulWidget {
 
 class _PlotsScreenState extends State<PlotsScreen> {
   DatabaseReference dbRef = FirebaseDatabase.instance.ref().child(DATABASE);
+  User? currentUser = FirebaseAuth.instance.currentUser;
   List<MeditionData> meditionList = [];
   List<MeditionData> meditionShow = [];
   bool isShowingMainData = false;
@@ -33,7 +37,11 @@ class _PlotsScreenState extends State<PlotsScreen> {
   void retrieveMeditionData(DateTime dia) {
     List<MeditionData> auxMeditionShow = [];
 
-    dbRef.orderByChild("id").equalTo("2").onValue.listen((data) {
+    dbRef
+        .orderByChild("id")
+        .equalTo(widget.userShared?.uID ?? currentUser!.uid)
+        .onValue
+        .listen((data) {
       DataSnapshot dataSnapshot = data.snapshot;
       Map<dynamic, dynamic> values = dataSnapshot.value as Map;
       values.forEach((key, values) {
@@ -61,7 +69,7 @@ class _PlotsScreenState extends State<PlotsScreen> {
         backgroundColor: mainColor,
         appBar: AppBar(
           backgroundColor: mainColor,
-          title: const Text('Estadisticas'),
+          title: Text(widget.userShared?.nombre ?? 'Estadisticas'),
           actions: [
             Theme(
               data: calendarTheme(context, mainColor),
@@ -74,6 +82,7 @@ class _PlotsScreenState extends State<PlotsScreen> {
                         ? Colors.white
                         : Colors.red[900],
                     onPressed: () async {
+                      print(currentUser!.uid);
                       dayFilter = await daySelectedCalendar(
                               context: contextTM, daySelected: filterDay) ??
                           DateTime.now();

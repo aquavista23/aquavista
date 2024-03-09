@@ -1,5 +1,6 @@
 import 'package:aquavista/src/bloc/authentication_bloc/authentication_bloc.dart';
 import 'package:aquavista/src/bloc/authentication_bloc/authentication_event.dart';
+import 'package:aquavista/src/screens/shared/shared_screen.dart';
 import 'package:aquavista/src/screens/statistics/plots_screens.dart';
 import 'package:aquavista/src/util/show_dialog.dart';
 import 'package:flutter/material.dart';
@@ -43,14 +44,19 @@ class MyDrawer extends StatelessWidget {
               }),
           ListTile(
               title: Text(
-                'Sincronización',
+                'Compartidos',
                 style: TextStyle(color: mainColor),
               ),
               leading: Icon(
-                Icons.sync,
+                Icons.share_outlined,
                 color: mainColor,
               ),
-              onTap: () {}),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SharedScreen()),
+                );
+              }),
           ListTile(
               title: Text(
                 'Ajustes',
