@@ -1,4 +1,3 @@
-// import 'dart:html';
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'package:aquavista/src/util/style.dart';
+import 'package:aquavista/src/util/dialogs.dart';
 import 'package:aquavista/src/functions/setting_functions.dart';
 import 'package:aquavista/src/screens/options/wifi_setting.dart';
 import 'package:aquavista/src/screens/options/share_devices.dart';
@@ -49,30 +49,34 @@ class _SettingState extends State<Setting> {
               late ConnectivityResult result;
               String ssid = '';
               String bssid = '';
+              int signal = -100;
               // Platform messages may fail, so we use a try/catch PlatformException.
               try {
                 result = await connect.checkConnectivity();
+                // snackBarAlert(
+                //     context: context, text: result.name, color: mainColor);
               } on PlatformException catch (e) {
                 debugPrint(
                     'Couldn\'t check connectivity status ${e.toString()}');
                 return;
               }
-              ssid = await getWifiName() ?? '';
-              bssid = await getWifiSSID() ?? '';
-              // print('???????????/ ${result.name}');
-              // if (true) {
-              //   print('>>>>>>>>>>>>> getWifiName: $ssid');
-              //   print('>>>>>>>>>>>>> getWifiSSID: $bssid');
-              //   print(
-              //       '>>>>>>>>>>>>> getWifiSignalLevel: ${await getWifiSignalLevel()}');
-              //   print('>>>>>>>>>>>>> getWifiIp: ${await getWifiIp()}');
-              // }
+              if (await isConnected()) {
+                ssid = await getWifiName() ?? '';
+                bssid = await getWifiBSSID() ?? '';
+                signal = await getWifiSignalLevel() ?? -100;
 
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => WifiPage(ssid: ssid, bssid: bssid)),
-              );
+                if (await confirmWifi(
+                    context, 'Confirmar', ssid, bssid, signal, true)) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            WifiPage(ssid: ssid, bssid: bssid)),
+                  );
+                }
+              } else {
+                await confirmWifi(context, 'Advertencia', '', '', 0, false);
+              }
 
               // print(
               //     '>>>>>>>>>>>>> testEsp(): ${testEsp(await getWifiName(), await getWifiSSID(), 'DURAN1995')}');

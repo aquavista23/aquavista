@@ -91,7 +91,7 @@ class _ForgotFormState extends State<ForgotForm> {
                   const SizedBox(
                     height: 20.0,
                   ),
-                  // Boton Registrar
+                  // Boton aceptar
                   InitialButton(
                       text: 'Aceptar',
                       onPressed: () {

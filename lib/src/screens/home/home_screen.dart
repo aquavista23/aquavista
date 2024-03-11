@@ -48,228 +48,250 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Container(
           padding: const EdgeInsets.only(left: 16, top: 25, right: 16),
           child: StreamBuilder<DatabaseEvent>(
-              stream: ref.ref(DATABASE).orderByChild("id").equalTo("2").onValue,
+              stream: ref
+                  .ref(DATABASE)
+                  .orderByChild("id")
+                  .equalTo(currentUser!.uid)
+                  .onValue,
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
                 }
+                if (snapshot.data?.snapshot.value != null) {
+                  return Column(
+                    children: [
+                      Builder(builder: (context) {
+                        List<MeditionData> meditionList = [];
 
-                return Column(
-                  children: [
-                    Builder(builder: (context) {
-                      List<MeditionData> meditionList = [];
+                        if (snapshot.data?.snapshot.value != null) {
+                          Map<dynamic, dynamic> values =
+                              snapshot.data!.snapshot.value as Map;
+                          values.forEach((key, values) {
+                            meditionList.add(MeditionData.fromJson(values));
+                          });
 
-                      if (snapshot.data?.snapshot.value != null) {
-                        Map<dynamic, dynamic> values =
-                            snapshot.data!.snapshot.value as Map;
-                        values.forEach((key, values) {
-                          meditionList.add(MeditionData.fromJson(values));
-                        });
-
-                        MeditionData? lastRegister = lastMedition(meditionList);
-                        return Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(),
-                                Container(
-                                  width: 60,
-                                  height: 50,
-                                  decoration: const BoxDecoration(
-                                      // border: Border.all(
-                                      //     width: 4,
-                                      //     color: Theme.of(context)
-                                      //         .scaffoldBackgroundColor),
-                                      // boxShadow: [
-                                      //   BoxShadow(
-                                      //       spreadRadius: 2,
-                                      //       blurRadius: 10,
-                                      //       color:
-                                      //           Colors.black.withOpacity(0.1),
-                                      //       offset: const Offset(0, 10))
-                                      // ],
-                                      // shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage(
-                                            'assets/LOGO.png',
-                                          ))),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 80,
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const PlotsScreen()),
-                                );
-                              },
-                              child: CircularPercentIndicator(
-                                radius: 100.0,
-                                lineWidth: 10.0,
-                                percent:
-                                    ((lastRegister!.turbidity ?? 0.0) / 100),
-                                linearGradient: const LinearGradient(colors: [
-                                  Color(0xFFACC3F2),
-                                  Color(0xFF044BD9)
-                                ], begin: Alignment.centerLeft),
-                                rotateLinearGradient: true,
-                                animateFromLastPercent: true,
-                                backgroundColor:
-                                    const Color.fromARGB(255, 59, 58, 58),
-                                center: Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        '${lastRegister.turbidity!}%',
-                                        style: TextStyle(
-                                            color: mainColor, fontSize: 35),
-                                      ),
-                                      Text(
-                                        'Turbidez',
-                                        style: TextStyle(
-                                            color: mainColor, fontSize: 16),
-                                      ),
-                                    ],
+                          MeditionData? lastRegister =
+                              lastMedition(meditionList);
+                          return Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(),
+                                  Container(
+                                    width: 60,
+                                    height: 50,
+                                    decoration: const BoxDecoration(
+                                        // border: Border.all(
+                                        //     width: 4,
+                                        //     color: Theme.of(context)
+                                        //         .scaffoldBackgroundColor),
+                                        // boxShadow: [
+                                        //   BoxShadow(
+                                        //       spreadRadius: 2,
+                                        //       blurRadius: 10,
+                                        //       color:
+                                        //           Colors.black.withOpacity(0.1),
+                                        //       offset: const Offset(0, 10))
+                                        // ],
+                                        // shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: AssetImage(
+                                              'assets/LOGO.png',
+                                            ))),
                                   ),
-                                ),
-                                // progressColor: const Color(0xffACC3F2),
+                                ],
                               ),
-                            ),
-                            const SizedBox(
-                              height: 50,
-                            ),
-                          ],
-                        );
-                      } else {
-                        return emptyCard(mainColor);
-                      }
-                    }),
-                    Builder(builder: (context) {
-                      List<MeditionData> meditionList = [];
-
-                      if (snapshot.data?.snapshot.value != null) {
-                        Map<dynamic, dynamic> values =
-                            snapshot.data!.snapshot.value as Map;
-                        values.forEach((key, values) {
-                          meditionList.add(MeditionData.fromJson(values));
-                        });
-
-                        MeditionData? lastRegister = lastMedition(meditionList);
-                        return Card(
-                          color: mainColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          clipBehavior: Clip.antiAlias,
-                          // margin: const EdgeInsets.all(5),
-                          child: Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      cardText(
-                                          (lastRegister?.fecha != null)
-                                              ? 'Ult. Registro Turbidad'
-                                              : '',
-                                          12),
-                                      cardText(
-                                          (lastRegister?.fecha != null)
-                                              ? formatDateHome
-                                                  .format(lastRegister!.fecha!)
-                                              : '',
-                                          12,
-                                          color: Colors.white.withOpacity(0.7))
-                                    ],
+                              const SizedBox(
+                                height: 80,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const PlotsScreen()),
+                                  );
+                                },
+                                child: CircularPercentIndicator(
+                                  radius: 100.0,
+                                  lineWidth: 10.0,
+                                  percent:
+                                      ((lastRegister!.turbidity ?? 0.0) / 100),
+                                  linearGradient: const LinearGradient(colors: [
+                                    Color(0xFFACC3F2),
+                                    Color(0xFF044BD9)
+                                  ], begin: Alignment.centerLeft),
+                                  rotateLinearGradient: true,
+                                  animateFromLastPercent: true,
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 59, 58, 58),
+                                  center: Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          '${lastRegister.turbidity!}%',
+                                          style: TextStyle(
+                                              color: mainColor, fontSize: 35),
+                                        ),
+                                        Text(
+                                          'Turbidez',
+                                          style: TextStyle(
+                                              color: mainColor, fontSize: 16),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  cardText(
-                                      lastRegister?.turbidity.toString() ??
-                                          'no Data',
-                                      18,
-                                      color: (lastRegister!.flow! >= 45)
-                                          ? Colors.green
-                                          : Colors.red)
-                                ],
-                              )),
-                        );
-                      } else {
-                        return emptyCard(mainColor);
-                      }
-                    }),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Builder(builder: (context) {
-                      List<MeditionData> meditionList = [];
-                      if (snapshot.data?.snapshot.value != null) {
-                        Map<dynamic, dynamic> values =
-                            snapshot.data!.snapshot.value as Map;
-                        values.forEach((key, values) {
-                          meditionList.add(MeditionData.fromJson(values));
-                        });
+                                  // progressColor: const Color(0xffACC3F2),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 50,
+                              ),
+                            ],
+                          );
+                        } else {
+                          return Container();
+                          // emptyCard(mainColor);
+                        }
+                      }),
+                      Builder(builder: (context) {
+                        List<MeditionData> meditionList = [];
 
-                        MeditionData? lastRegister = lastMedition(meditionList);
-                        return Card(
-                          color: mainColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          clipBehavior: Clip.antiAlias,
-                          // margin: const EdgeInsets.all(5),
-                          child: Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      cardText(
-                                          (lastRegister?.fecha != null)
-                                              ? 'Ult. Registro Flujo'
-                                              : '',
-                                          12),
-                                      cardText(
-                                          (lastRegister?.fecha != null)
-                                              ? formatDateHome
-                                                  .format(lastRegister!.fecha!)
-                                              : '',
-                                          12,
-                                          color: Colors.white.withOpacity(0.7))
-                                    ],
-                                  ),
-                                  cardText(
-                                      lastRegister?.flow.toString() ??
-                                          'no Data',
-                                      18.0,
-                                      color: (lastRegister!.flow! >= 45)
-                                          ? Colors.green
-                                          : Colors.red)
-                                ],
-                              )),
-                        );
-                      } else {
-                        return emptyCard(mainColor);
-                      }
-                    }),
-                  ],
-                );
+                        if (snapshot.data?.snapshot.value != null) {
+                          Map<dynamic, dynamic> values =
+                              snapshot.data!.snapshot.value as Map;
+                          values.forEach((key, values) {
+                            meditionList.add(MeditionData.fromJson(values));
+                          });
+
+                          MeditionData? lastRegister =
+                              lastMedition(meditionList);
+                          return Card(
+                            color: mainColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            clipBehavior: Clip.antiAlias,
+                            // margin: const EdgeInsets.all(5),
+                            child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        cardText(
+                                            (lastRegister?.fecha != null)
+                                                ? 'Ult. Registro Turbidad'
+                                                : '',
+                                            12),
+                                        cardText(
+                                            (lastRegister?.fecha != null)
+                                                ? formatDateHome.format(
+                                                    lastRegister!.fecha!)
+                                                : '',
+                                            12,
+                                            color:
+                                                Colors.white.withOpacity(0.7))
+                                      ],
+                                    ),
+                                    cardText(
+                                        lastRegister?.turbidity.toString() ??
+                                            'no Data',
+                                        18,
+                                        color: (lastRegister!.flow! >= 55)
+                                            ? Colors.green
+                                            : Colors.red)
+                                  ],
+                                )),
+                          );
+                        } else {
+                          return Container();
+                          // return emptyCard(mainColor);
+                        }
+                      }),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Builder(builder: (context) {
+                        List<MeditionData> meditionList = [];
+                        if (snapshot.data?.snapshot.value != null) {
+                          Map<dynamic, dynamic> values =
+                              snapshot.data!.snapshot.value as Map;
+                          values.forEach((key, values) {
+                            meditionList.add(MeditionData.fromJson(values));
+                          });
+
+                          MeditionData? lastRegister =
+                              lastMedition(meditionList);
+                          return Card(
+                            color: mainColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            clipBehavior: Clip.antiAlias,
+                            // margin: const EdgeInsets.all(5),
+                            child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        cardText(
+                                            (lastRegister?.fecha != null)
+                                                ? 'Ult. Registro Flujo'
+                                                : '',
+                                            12),
+                                        cardText(
+                                            (lastRegister?.fecha != null)
+                                                ? formatDateHome.format(
+                                                    lastRegister!.fecha!)
+                                                : '',
+                                            12,
+                                            color:
+                                                Colors.white.withOpacity(0.7))
+                                      ],
+                                    ),
+                                    cardText(
+                                        lastRegister?.flow.toString() ??
+                                            'no Data',
+                                        18.0,
+                                        color: (lastRegister!.turbidity! <= 40)
+                                            ? Colors.red
+                                            : Colors.green)
+                                  ],
+                                )),
+                          );
+                        } else {
+                          return Container();
+                          // return emptyCard(mainColor);
+                        }
+                      }),
+                    ],
+                  );
+                } else {
+                  return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 8.0),
+                      child: Center(
+                        child: Image.asset("assets/LOGO.png"),
+                      ));
+                }
               }),
         ),
       ),

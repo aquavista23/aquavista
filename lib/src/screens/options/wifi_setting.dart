@@ -1,10 +1,11 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 
-import 'package:esptouch_smartconfig/esptouch_smartconfig.dart';
+import 'package:wifi_iot/wifi_iot.dart';
 
 import 'package:aquavista/src/util/style.dart';
-import 'package:aquavista/src/functions/task_route_page.dart';
+import 'package:aquavista/src/util/snackbar.dart';
+import 'package:aquavista/src/screens/options/Select_device.dart';
 
 class WifiPage extends StatefulWidget {
   final String ssid;
@@ -18,10 +19,14 @@ class WifiPage extends StatefulWidget {
 }
 
 class _WifiPageState extends State<WifiPage> {
-  bool isBroad = true;
+  bool _obscureText = true;
+  NetworkSecurity security = NetworkSecurity.WPA;
   TextEditingController password = TextEditingController();
-  TextEditingController deviceCount = TextEditingController(text: "1");
-
+  List<String> securiList = <String>[
+    'WPA',
+    'WEP',
+    'NONE',
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,31 +64,23 @@ class _WifiPageState extends State<WifiPage> {
                     height: 10,
                   ),
                   TextField(
-                    obscureText: true,
+                    obscureText: _obscureText,
                     controller: password,
                     cursorColor: Colors.black,
                     decoration: InputDecoration(
-                        labelText: "Password:",
-                        suffixIcon:
-                            Icon(Icons.remove_red_eye, color: Colors.grey),
-                        labelStyle: TextStyle(color: Colors.grey),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(4),
-                          borderSide: BorderSide(color: mainColor),
+                        labelText: "Contraseña:",
+                        suffixIcon: SizedBox(
+                          height: 20,
+                          child: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _obscureText = !_obscureText;
+                                });
+                              },
+                              icon: Icon((_obscureText)
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined)),
                         ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(4),
-                          borderSide: BorderSide(color: Colors.black),
-                        )),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextField(
-                    controller: deviceCount,
-                    cursorColor: Colors.black,
-                    decoration: InputDecoration(
-                        labelText: "DeviceCount:",
                         labelStyle: TextStyle(color: Colors.grey),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(4),
@@ -95,46 +92,66 @@ class _WifiPageState extends State<WifiPage> {
                         )),
                   ),
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Radio<bool>(
-                          groupValue: isBroad,
-                          value: true,
-                          activeColor: mainColor,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isBroad = value!;
-                            });
-                          }),
-                      Text("BroadCast"),
-                      SizedBox(width: 6),
-                      Radio<bool>(
-                          groupValue: isBroad,
-                          value: false,
-                          activeColor: mainColor,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isBroad = value!;
-                            });
-                          }),
-                      Text("MultiCast"),
+                      Text('Seguridad: '),
+                      DropdownButton<String>(
+                        hint: Text(security.name),
+                        items: securiList.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (val) {
+                          setState(() {
+                            switch (val) {
+                              case 'WPA':
+                                security = NetworkSecurity.WPA;
+                                break;
+                              case 'WEP':
+                                security = NetworkSecurity.WEP;
+                                break;
+                              default:
+                                security = NetworkSecurity.NONE;
+                            }
+                          });
+                        },
+                      ),
                     ],
+                  ),
+                  SizedBox(
+                    height: 5,
                   ),
                   ElevatedButton(
                       onPressed: () async {
-                        Set<ESPTouchResult> result = await Navigator.of(context)
-                            .push(MaterialPageRoute(
-                                builder: (context) => TaskRoute(
+                        // print('>>>>>>>>>>>>>>>>>.. ${security.name}');
+                        // print('>>>>>>>>>>>>>>>>>.. ${password.text}');
+
+                        // bool resp = await tryConecction(
+                        //     widget.ssid, widget.bssid, password.text, security);
+
+                        if (password.text.length >= 8) {
+                          // print('>>>>>>>>>>>>>>>>>>>>>>>>> $resp');
+                          await Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => SelectDevice(
                                     widget.ssid,
                                     widget.bssid,
                                     password.text,
-                                    deviceCount.text,
-                                    isBroad)));
+                                  )));
+                        } else {
+                          snackBarAlert(
+                              text: 'Contraseña no Valida',
+                              context: context,
+                              color: Colors.red);
+                        }
                       },
                       style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.resolveWith<Color>(
                                   (Set<MaterialState> states) => mainColor)),
-                      child: Text("CONFIRM")),
+                      child: Text("Validar")),
                 ],
               ),
             ),

@@ -1,40 +1,85 @@
 // ignore_for_file: deprecated_member_use
 
 // import 'package:esp_smartconfig/esp_smartconfig.dart';
-import 'package:network_info_plus/network_info_plus.dart';
+// import 'package:network_info_plus/network_info_plus.dart';
+import 'package:wifi_iot/wifi_iot.dart';
 
-final NetworkInfo info = NetworkInfo();
+Future<bool> isConnected() async {
+  try {
+    {
+      return await WiFiForIoTPlugin.isConnected();
+    }
+  } on Exception catch (_) {
+    return false;
+  }
+}
+
 Future<String?> getWifiName() async {
   try {
     {
-      return await info.getWifiName();
+      return await WiFiForIoTPlugin.getSSID();
     }
   } on Exception catch (_) {
     return '';
   }
 }
 
-Future<String?> getWifiSSID() async {
+Future<String?> getWifiBSSID() async {
   try {
-    return await info.getWifiBSSID();
+    return await WiFiForIoTPlugin.getBSSID();
   } on Exception catch (_) {
     return '';
   }
 }
 
-Future<String?> getWifiSignalLevel() async {
+Future<int?> getWifiSignalLevel() async {
   try {
-    return await info.getWifiBroadcast();
+    return await WiFiForIoTPlugin.getCurrentSignalStrength();
   } on Exception catch (_) {
-    return '';
+    return -100;
   }
 }
 
 Future<String?> getWifiIp() async {
   try {
-    return await info.getWifiIP();
+    return await WiFiForIoTPlugin.getIP();
   } on Exception catch (_) {
     return '';
+  }
+}
+
+// Future<String?> getWifiSegurity() async {
+//   try {
+//     return await WiFiForIoTPlugin.;
+//   } on Exception catch (_) {
+//     return '';
+//   }
+// }
+
+Future<bool> tryConecction(
+  String ssid,
+) async {
+  try {
+    {
+      bool res = await WiFiForIoTPlugin.connect(
+        ssid,
+        security: NetworkSecurity.WPA,
+      );
+      await WiFiForIoTPlugin.forceWifiUsage(true);
+      return res;
+    }
+  } on Exception catch (_) {
+    return false;
+  }
+}
+
+Stream<List<WifiNetwork>>? searcDevices() {
+  try {
+    {
+      return WiFiForIoTPlugin.onWifiScanResultReady;
+    }
+  } on Exception catch (_) {
+    return null;
   }
 }
 

@@ -162,14 +162,21 @@ Widget buttonSetting(String text, IconData icon, Function() onPress,
               strokeColor: colorStroke ?? logoImageColor)),
     );
 
-Widget cardWithPadding(Widget child) {
+Widget cardWithPadding(
+    {required Widget child, double? sizePad, double? sizeMar, Color? color}) {
   return Card(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(15.0),
     ),
-    clipBehavior: Clip.antiAlias,
-    margin: const EdgeInsets.all(10),
-    child: Padding(padding: const EdgeInsets.all(15.0), child: child),
+    child: Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      clipBehavior: Clip.antiAlias,
+      margin: EdgeInsets.all(sizeMar ?? 10),
+      color: color,
+      child: Padding(padding: EdgeInsets.all(sizePad ?? 15.0), child: child),
+    ),
   );
 }
 
@@ -213,7 +220,7 @@ Widget containerWithList(
   List<Widget> children = [
     Text(
       tittle,
-      style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+      style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
     ),
     const SizedBox(
       height: 35,
@@ -261,3 +268,15 @@ Widget rowOfButtons(
     ],
   );
 }
+
+Widget aspecWithPadding({required Widget child}) => AspectRatio(
+      aspectRatio: 1.2,
+      child: Padding(
+          padding: const EdgeInsets.only(
+            right: 15,
+            left: 10,
+            top: 10,
+            bottom: 10,
+          ),
+          child: child),
+    );

@@ -7,6 +7,7 @@ class UserData {
   DateTime? fechaInsersion;
   DateTime? fechaToken;
   Map? compartir;
+  Map? participa;
 
   UserData({
     this.uID,
@@ -17,6 +18,7 @@ class UserData {
     this.fechaInsersion,
     this.fechaToken,
     this.compartir,
+    this.participa,
   });
 
   UserData.fromJson(Map<dynamic, dynamic> json) {
@@ -28,6 +30,7 @@ class UserData {
     fechaInsersion = DateTime.tryParse(json["fecha_insercion"].toString());
     fechaToken = DateTime.tryParse(json["fecha_token"].toString());
     compartir = json["compartir"] ?? {};
+    participa = json["participa"] ?? {};
   }
 
   Map<String, dynamic> toMap() {
@@ -39,7 +42,8 @@ class UserData {
       "token": token,
       "fecha_insercion": fechaInsersion.toString(),
       "fecha_token": fechaToken.toString(),
-      "compartir": compartir
+      "compartir": compartir,
+      "participa": participa
     };
   }
 }

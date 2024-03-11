@@ -8,13 +8,11 @@ MeditionData? lastMedition(List<MeditionData> meditionList) {
     DateTime date = convertDate(meditionList[0].fecha!);
     result = meditionList[0];
     for (var i = 0; i < meditionList.length; i++) {
-      print('+++++++++++++++++++ ${meditionList[i].toMap()}');
       if (meditionList[i].fecha!.isAfter(date)) {
         result = meditionList[i];
       }
     }
   }
-  print('================ ${result?.toMap()}');
   return result;
 }
 

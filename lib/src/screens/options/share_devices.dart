@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_unnecessary_containers
+
 import 'package:aquavista/src/util/snackbar.dart';
 import 'package:flutter/material.dart';
 
@@ -44,6 +46,7 @@ class _ShareDevicesState extends State<ShareDevices> {
                         if (documentSnapshot.exists) {
                           List<String> listID = [];
                           Map mapShared = {};
+                          Map participt = {};
                           // Map<String, bool> auxSharedWith = sharedWith;
                           // List? auxValues = values;
                           try {
@@ -67,6 +70,19 @@ class _ShareDevicesState extends State<ShareDevices> {
                               if (mapShared.containsKey(listDelete[i])) {
                                 mapShared.remove(listDelete[i]);
                               }
+                            }
+
+                            for (var i = 0; i < listDelete.length; i++) {
+                              participt = await userColection
+                                  .doc(listDelete[i])
+                                  .get()
+                                  .then((value) => value['participa']);
+
+                              participt.remove(currentUser!.uid);
+
+                              await userColection
+                                  .doc(listDelete[i])
+                                  .update({'participa': participt});
                             }
                             setState(() {
                               deleteSelect = false;
@@ -210,7 +226,7 @@ class _ShareDevicesState extends State<ShareDevices> {
     Map<String, bool> auxShareWith = sharedWith;
     return (ind < values.length)
         ? cardWithPadding(
-            Row(
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -356,6 +372,7 @@ class _ShareDevicesState extends State<ShareDevices> {
                                 if (documentSnapshot.exists) {
                                   List<String> listID = [];
                                   Map mapShared = {};
+                                  Map participt = {};
                                   try {
                                     Map shared = documentSnapshot.data() as Map;
 
@@ -373,11 +390,27 @@ class _ShareDevicesState extends State<ShareDevices> {
                                       });
                                     }
 
+                                    await userColection
+                                        .doc(result!.uID)
+                                        .get()
+                                        .then((sharedSnapshot) async {
+                                      if (sharedSnapshot.exists) {
+                                        participt = sharedSnapshot['participa'];
+                                      }
+                                    });
+                                    debugPrint(
+                                        '???????????????????????/// $participt');
                                     mapShared[result!.uID] = result!.token;
+                                    participt[currentUser!.uid] =
+                                        currentUser!.email;
 
                                     await userColection
                                         .doc(currentUser!.uid)
                                         .update({'compartir': mapShared});
+
+                                    await userColection
+                                        .doc(result!.uID)
+                                        .update({'participa': participt});
                                   } catch (e) {
                                     debugPrint(
                                         '??????????????//updateShare ${e.toString()}');
@@ -393,7 +426,7 @@ class _ShareDevicesState extends State<ShareDevices> {
                 body: Container(
                     child: (result != null)
                         ? cardWithPadding(
-                            Row(
+                            child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [

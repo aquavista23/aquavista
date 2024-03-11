@@ -79,7 +79,8 @@ Future<bool> createUser(String id, String email, String? token, String? nombre,
       'token': token,
       'fecha_insercion': DateTime.now(),
       'fecha_token': DateTime.now(),
-      'compartir': {id: token}
+      'compartir': {id: token},
+      'participa': {}
     });
     await FirebaseFirestore.instance
         .collection('usuarios')
