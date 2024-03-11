@@ -398,7 +398,7 @@ class _ShareDevicesState extends State<ShareDevices> {
                                         participt = sharedSnapshot['participa'];
                                       }
                                     });
-                                    print(
+                                    debugPrint(
                                         '???????????????????????/// $participt');
                                     mapShared[result!.uID] = result!.token;
                                     participt[currentUser!.uid] =
