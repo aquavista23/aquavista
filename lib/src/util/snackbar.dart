@@ -38,6 +38,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> snackBarAlert({
   required String text,
   required BuildContext context,
   required Color color,
+  int? duration,
 }) {
   ScaffoldMessenger.of(context).removeCurrentSnackBar();
   return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -52,6 +53,6 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> snackBarAlert({
     behavior: SnackBarBehavior.floating,
     margin: const EdgeInsets.only(left: 50.0, right: 50.0, bottom: 20.0),
     backgroundColor: Colors.black.withOpacity(0.5),
-    duration: const Duration(milliseconds: 1500),
+    duration: Duration(milliseconds: duration ?? 1500),
   ));
 }

@@ -1,9 +1,9 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 
 import 'package:aquavista/src/util/style.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+// import 'package:flutter/src/foundation/key.dart';
+// import 'package:flutter/src/widgets/framework.dart';
 
 class CheckConecction extends StatefulWidget {
   final String validator;
@@ -17,7 +17,7 @@ class _CheckConecctionState extends State<CheckConecction> {
   final TextEditingController _validatorController = TextEditingController();
   bool validateChance = false;
   bool activeButton = false;
-  int countDown = 90;
+  int countDown = 60;
   late Timer _timer;
 
   void startTimer() {
@@ -28,6 +28,7 @@ class _CheckConecctionState extends State<CheckConecction> {
         if (countDown == 0) {
           setState(() {
             timer.cancel();
+            Navigator.of(context).pop();
           });
         } else {
           setState(() {
@@ -120,7 +121,6 @@ class _CheckConecctionState extends State<CheckConecction> {
                 primary: (activeButton) ? Colors.green : Colors.grey,
               ),
               onPressed: () async {
-                print('>>>>>>>>>>>>>> ${widget.validator}');
                 if (activeButton) {
                   Navigator.pushNamedAndRemoveUntil(
                       context, '/', (Route<dynamic> route) => false);
