@@ -1,24 +1,31 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, deprecated_member_use, use_build_context_synchronously
 
 import 'dart:math';
-import 'dart:convert';
+// import 'dart:convert';
+import 'package:app_settings/app_settings.dart';
+import 'package:aquavista/src/util/dialogs.dart';
+// import 'package:aquavista/src/util/snackbar.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
 import 'package:wifi_iot/wifi_iot.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:aquavista/src/util/style.dart';
 import 'package:aquavista/src/functions/dialogs_functions.dart';
 import 'package:aquavista/src/functions/setting_functions.dart';
-import 'package:aquavista/src/screens/options/check_conection.dart';
+// import 'package:aquavista/src/screens/options/check_conection.dart';
 
 class SelectDevice extends StatefulWidget {
-  const SelectDevice(this.ssid, this.bssid, this.password, {Key? key})
+  const SelectDevice(this.ssid, this.bssid, this.password, this.networks,
+      {Key? key})
       : super(key: key);
   final String ssid;
   final String bssid;
   final String password;
+  final List<WifiNetwork> networks;
+
   @override
   State<StatefulWidget> createState() {
     return SelectDeviceState();
@@ -27,6 +34,9 @@ class SelectDevice extends StatefulWidget {
 
 class SelectDeviceState extends State<SelectDevice> {
   User? currentUser = FirebaseAuth.instance.currentUser;
+  final _firebaseMessaging = FirebaseMessaging.instance;
+
+  bool isScanning = true;
   @override
   void initState() {
     super.initState();
@@ -96,6 +106,8 @@ class SelectDeviceState extends State<SelectDevice> {
       body: StreamBuilder<List<WifiNetwork>>(
         stream: searcDevices(),
         builder: (context, AsyncSnapshot<List<WifiNetwork>> snapshot) {
+          final allNetworks = snapshot.data ?? widget.networks;
+
           if (!snapshot.hasData) {
             return Center(
               child: CircularProgressIndicator(backgroundColor: Colors.red),
@@ -104,47 +116,30 @@ class SelectDeviceState extends State<SelectDevice> {
           if (snapshot.hasError) {
             return error(context, 'Error in StreamBuilder');
           }
-          if (snapshot.data!.isNotEmpty) {
+
+          if (allNetworks.isNotEmpty) {
             return ListView.separated(
-              itemCount: snapshot.data!.length,
+              itemCount: allNetworks.length,
               separatorBuilder: (context, index) => const Divider(
                 color: Colors.grey,
               ),
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
                   onTap: () async {
-                    if (snapshot.data![index].ssid != null) {
+                    if (allNetworks[index].ssid != null) {
+                      debugPrint(
+                          ">>>>>>>>>>>>>> ${allNetworks[index].ssid!}, ");
+                      await AppSettings.openWIFISettings(asAnotherTask: true);
                       String validator = getRandomInt().toString();
-                      await tryConecction(snapshot.data![index].ssid!);
-                      String? ipAddres = await getWifiIp();
-                      debugPrint('>>>>>>>>>>>>>:  http://$ipAddres:80/');
-                      http.Response? response = await http
-                          .post(Uri.parse('http://$ipAddres:80/config'),
-                              headers: {
-                                "Content-Type":
-                                    "application/json;charSet=UTF-8",
-                              },
-                              body: jsonEncode({
-                                'ssid': widget.ssid,
-                                'password': widget.password,
-                                'user_id': currentUser!.uid,
-                                'token': validator.padRight(5, '0'),
-                              }))
-                          .then((onResponse) {
-                        print('>>>>>>>>> ${onResponse.body}');
-                      });
-                      // print('<<<<<<<<<<<<<<<<<<<<<<<< ${response?.statusCode}');
-                      // if (response?.statusCode == 200) {
-                      //   print("account created succesfully");
-                      // } else {
-                      //   print('failed');
-                      // }
-                      await Navigator.push(
+                      await confirmWiFiIoT(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => CheckConecction(
-                                  validator: validator.padRight(5, '0'),
-                                )),
+                        allNetworks[index].ssid!,
+                        await _firebaseMessaging.getToken(),
+                        allNetworks[index].ssid!,
+                        widget.bssid,
+                        widget.password,
+                        currentUser!.uid,
+                        validator,
                       );
                     }
                   },
@@ -159,9 +154,9 @@ class SelectDeviceState extends State<SelectDevice> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(snapshot.data![index].ssid ?? '<Desconocido>'),
+                          Text(allNetworks[index].ssid ?? '<Desconocido>'),
                           Text(
-                            'Estado de Red: ${levelSignal(snapshot.data![index].level ?? -100)}',
+                            'Estado de Red: ${levelSignal(allNetworks[index].level ?? -100)}',
                             style: const TextStyle(color: Colors.grey),
                           ),
                         ],

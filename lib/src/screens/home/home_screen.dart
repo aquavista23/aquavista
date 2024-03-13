@@ -1,17 +1,24 @@
-import 'package:aquavista/src/screens/statistics/plots_screens.dart';
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import 'package:aquavista/src/util/style.dart';
+import 'package:aquavista/src/util/dialogs.dart';
 import 'package:aquavista/src/widgets/drawer.dart';
 import 'package:aquavista/src/util/constantes.dart';
 import 'package:aquavista/src/util/show_dialog.dart';
 import 'package:aquavista/src/models/medition_model.dart';
 import 'package:aquavista/src/functions/home_function.dart';
+import 'package:aquavista/src/functions/setting_functions.dart';
+import 'package:aquavista/src/screens/options/wifi_setting.dart';
+import 'package:aquavista/src/screens/statistics/plots_screens.dart';
 import 'package:aquavista/src/bloc/authentication_bloc/bloc.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -52,8 +59,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   .ref(DATABASE)
                   .orderByChild("id")
                   .equalTo(currentUser!.uid)
-                  .onValue,
+                  .onValue
+                  .timeout(
+                const Duration(seconds: 5),
+                onTimeout: (sink) {
+                  sink.addError('Error');
+                },
+              ),
               builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 8.0),
+                      child: Center(
+                        child: Image.asset("assets/LOGO.png"),
+                      ));
+                }
                 if (!snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
                 }
@@ -293,6 +314,44 @@ class _HomeScreenState extends State<HomeScreen> {
                       ));
                 }
               }),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final connect = Connectivity();
+          late ConnectivityResult result;
+          String ssid = '';
+          String bssid = '';
+          int signal = -100;
+          // Platform messages may fail, so we use a try/catch PlatformException.
+          try {
+            result = await connect.checkConnectivity();
+            // snackBarAlert(
+            //     context: context, text: result.name, color: mainColor);
+          } on PlatformException catch (e) {
+            debugPrint('Couldn\'t check connectivity status ${e.toString()}');
+            return;
+          }
+          if (await isConnected()) {
+            ssid = await getWifiName() ?? '';
+            bssid = await getWifiBSSID() ?? '';
+            signal = await getWifiSignalLevel() ?? -100;
+
+            if (await confirmWifi(
+                context, 'Confirmar', ssid, bssid, signal, true)) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => WifiPage(ssid: ssid, bssid: bssid)),
+              );
+            }
+          } else {
+            await confirmWifi(context, 'Advertencia', '', '', 0, false);
+          }
+        },
+        backgroundColor: mainColor,
+        child: const Icon(
+          Icons.add_circle_outline_sharp,
         ),
       ),
     );

@@ -1,13 +1,18 @@
 // ignore_for_file: avoid_unnecessary_containers, sized_box_for_whitespace, use_build_context_synchronously
+
+import 'dart:convert';
 import 'package:flutter/material.dart';
 
+import 'package:http/http.dart' as http;
 import 'package:app_settings/app_settings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:aquavista/src/util/style.dart';
 import 'package:aquavista/src/util/snackbar.dart';
 import 'package:aquavista/src/functions/dialogs_functions.dart';
+import 'package:aquavista/src/functions/setting_functions.dart';
 import 'package:aquavista/src/functions/user_perfil_function.dart';
+import 'package:aquavista/src/screens/options/check_conection.dart';
 
 Widget alertDialogCustomize(
     {double? height, double? width, required Widget child, Color? color}) {
@@ -475,6 +480,138 @@ Future<bool> confirmWifi(BuildContext context, String title, String ssid,
                                 onPressed: () =>
                                     Navigator.of(mainContext).pop(false),
                               ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
+        ),
+      ) ??
+      false;
+}
+
+Future<bool> confirmWiFiIoT(
+  BuildContext context,
+  String ssid,
+  String? token,
+  String? thisbssid,
+  String wifissid,
+  String wifipassword,
+  String currentUser,
+  String validator,
+) async {
+  return await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext mainContext) => ScaffoldMessenger(
+          child: Builder(builder: (contextMS) {
+            return Scaffold(
+              backgroundColor: Colors.transparent,
+              body: alertDialogCustomize(
+                height: 200,
+                width: 150,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Center(
+                    child: ListView(
+                      children: <Widget>[
+                        const SizedBox(height: 5),
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text('Confirmar',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          'Desea Continuar con la red $ssid?',
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 15),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            ElevatedButton(
+                                style: buttonStyle(
+                                    radium: 30.0, color: Colors.green),
+                                child: const Text(
+                                  "Aceptar",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                onPressed: () async {
+                                  String? bssid = await getWifiBSSID();
+
+                                  if (thisbssid!.toUpperCase() ==
+                                      bssid!.toUpperCase()) {
+                                    String? ipAddres = await getWifiIp();
+                                    debugPrint(
+                                        '>>>>>>>>>>>>>:  http://$ipAddres:80/');
+                                    http.Response? response = await http
+                                        .post(
+                                            Uri.parse(
+                                                'http://192.168.4.1/config'),
+                                            headers: {
+                                              "Content-Type":
+                                                  "application/json;charSet=UTF-8",
+                                            },
+                                            body: jsonEncode({
+                                              'ssid': wifissid,
+                                              'pass': wifipassword,
+                                              'user_id': currentUser,
+                                              'token':
+                                                  validator.padRight(5, '0'),
+                                              'notif': token,
+                                            }))
+                                        .then((onResponse) {
+                                      debugPrint(
+                                          '>>>>>>>>> ${onResponse.body}');
+                                    }).catchError((onError) {
+                                      debugPrint(
+                                          '>>>>>>>>>>>>>>>>>>> $onError');
+                                    });
+                                    if (response?.statusCode == 200) {
+                                      debugPrint("account created succesfully");
+                                    } else {
+                                      debugPrint('failed');
+                                    }
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CheckConecction(
+                                                validator:
+                                                    validator.padRight(5, '0'),
+                                              )),
+                                    );
+                                  } else {
+                                    snackBarAlert(
+                                        text:
+                                            'No se conecto a la red Seleccionada',
+                                        context: contextMS,
+                                        color: Colors.amber,
+                                        duration: 2500);
+                                  }
+                                }),
+                            ElevatedButton(
+                              style:
+                                  buttonStyle(radium: 30.0, color: Colors.red),
+                              child: const Text(
+                                "Cancelar",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              onPressed: () =>
+                                  Navigator.of(mainContext).pop(false),
                             ),
                           ],
                         ),

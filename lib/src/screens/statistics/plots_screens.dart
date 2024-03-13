@@ -1,14 +1,14 @@
-import 'package:aquavista/src/functions/plots_functions.dart';
-import 'package:aquavista/src/models/user_model.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:fl_chart/fl_chart.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 import 'package:aquavista/src/util/style.dart';
 import 'package:aquavista/src/util/constantes.dart';
+import 'package:aquavista/src/models/user_model.dart';
 import 'package:aquavista/src/models/medition_model.dart';
+import 'package:aquavista/src/functions/plots_functions.dart';
 
 class PlotsScreen extends StatefulWidget {
   final UserData? userShared;
@@ -82,7 +82,7 @@ class _PlotsScreenState extends State<PlotsScreen> {
                         ? Colors.white
                         : Colors.red[900],
                     onPressed: () async {
-                      print(currentUser!.uid);
+                      debugPrint(currentUser!.uid);
                       dayFilter = await daySelectedCalendar(
                               context: contextTM, daySelected: filterDay) ??
                           DateTime.now();
@@ -186,7 +186,7 @@ class _PlotsScreenState extends State<PlotsScreen> {
           ),
           touchCallback: ((p0, p1) {
             if (p1 != null) {
-              print('?????????????????? ${p1.lineBarSpots![0].x}');
+              debugPrint('?????????????????? ${p1.lineBarSpots![0].x}');
             }
             // if (p0 != null) {
             //   print('>>>>>>>>>>>>>>>> ${p0.}');

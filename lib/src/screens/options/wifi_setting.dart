@@ -1,11 +1,12 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, deprecated_member_use, use_build_context_synchronously
+import 'package:aquavista/src/functions/setting_functions.dart';
 import 'package:flutter/material.dart';
 
 import 'package:wifi_iot/wifi_iot.dart';
 
 import 'package:aquavista/src/util/style.dart';
 import 'package:aquavista/src/util/snackbar.dart';
-import 'package:aquavista/src/screens/options/Select_device.dart';
+import 'package:aquavista/src/screens/options/select_device.dart';
 
 class WifiPage extends StatefulWidget {
   final String ssid;
@@ -133,12 +134,14 @@ class _WifiPageState extends State<WifiPage> {
                         //     widget.ssid, widget.bssid, password.text, security);
 
                         if (password.text.length >= 8) {
-                          // print('>>>>>>>>>>>>>>>>>>>>>>>>> $resp');
+                          List<WifiNetwork> networks =
+                              await enableDevices() ?? [];
                           await Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => SelectDevice(
                                     widget.ssid,
                                     widget.bssid,
                                     password.text,
+                                    networks,
                                   )));
                         } else {
                           snackBarAlert(

@@ -58,18 +58,30 @@ Future<String?> getWifiIp() async {
 
 Future<bool> tryConecction(
   String ssid,
+  String bssid,
 ) async {
   try {
     {
       bool res = await WiFiForIoTPlugin.connect(
         ssid,
-        security: NetworkSecurity.WPA,
+        bssid: bssid,
+        // security: NetworkSecurity.WPA,
       );
       await WiFiForIoTPlugin.forceWifiUsage(true);
       return res;
     }
   } on Exception catch (_) {
     return false;
+  }
+}
+
+Future<List<WifiNetwork>?> enableDevices() async {
+  try {
+    {
+      return await WiFiForIoTPlugin.loadWifiList();
+    }
+  } on Exception catch (_) {
+    return null;
   }
 }
 
