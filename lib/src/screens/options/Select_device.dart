@@ -22,7 +22,6 @@ import 'package:aquavista/src/functions/setting_functions.dart';
 class SelectDevice extends StatefulWidget {
   const SelectDevice(this.ssid, this.bssid, this.password, this.networks,
       {Key? key})
-
       : super(key: key);
   final String ssid;
   final String bssid;
@@ -122,7 +121,6 @@ class SelectDeviceState extends State<SelectDevice> {
           if (allNetworks.isNotEmpty) {
             return ListView.separated(
               itemCount: allNetworks.length,
-
               separatorBuilder: (context, index) => const Divider(
                 color: Colors.grey,
               ),
@@ -138,7 +136,7 @@ class SelectDeviceState extends State<SelectDevice> {
                         context,
                         allNetworks[index].ssid!,
                         await _firebaseMessaging.getToken(),
-                        allNetworks[index].ssid!,
+                        allNetworks[index].bssid!,
                         widget.bssid,
                         widget.password,
                         currentUser!.uid,
@@ -160,7 +158,6 @@ class SelectDeviceState extends State<SelectDevice> {
                           Text(allNetworks[index].ssid ?? '<Desconocido>'),
                           Text(
                             'Estado de Red: ${levelSignal(allNetworks[index].level ?? -100)}',
-
                             style: const TextStyle(color: Colors.grey),
                           ),
                         ],
