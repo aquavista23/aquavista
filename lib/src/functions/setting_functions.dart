@@ -66,6 +66,7 @@ Future<bool> tryConecction(
         ssid,
         bssid: bssid,
         // security: NetworkSecurity.WPA,
+
       );
       await WiFiForIoTPlugin.forceWifiUsage(true);
       return res;

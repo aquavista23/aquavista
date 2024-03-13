@@ -9,17 +9,20 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 // import 'package:http/http.dart' as http;
+
 import 'package:wifi_iot/wifi_iot.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:aquavista/src/util/style.dart';
 import 'package:aquavista/src/functions/dialogs_functions.dart';
 import 'package:aquavista/src/functions/setting_functions.dart';
+
 // import 'package:aquavista/src/screens/options/check_conection.dart';
 
 class SelectDevice extends StatefulWidget {
   const SelectDevice(this.ssid, this.bssid, this.password, this.networks,
       {Key? key})
+
       : super(key: key);
   final String ssid;
   final String bssid;
@@ -116,10 +119,10 @@ class SelectDeviceState extends State<SelectDevice> {
           if (snapshot.hasError) {
             return error(context, 'Error in StreamBuilder');
           }
-
           if (allNetworks.isNotEmpty) {
             return ListView.separated(
               itemCount: allNetworks.length,
+
               separatorBuilder: (context, index) => const Divider(
                 color: Colors.grey,
               ),
@@ -157,6 +160,7 @@ class SelectDeviceState extends State<SelectDevice> {
                           Text(allNetworks[index].ssid ?? '<Desconocido>'),
                           Text(
                             'Estado de Red: ${levelSignal(allNetworks[index].level ?? -100)}',
+
                             style: const TextStyle(color: Colors.grey),
                           ),
                         ],
