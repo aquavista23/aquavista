@@ -604,7 +604,7 @@ Future<bool> confirmWiFiIoT(
                                 ),
                                 onPressed: () async {
                                   String? bssid = await getWifiBSSID();
-                                  print(
+                                  debugPrint(
                                       '>>>>>>>>>>>>>>>> $thisbssid ===  $bssid');
                                   if (thisbssid!.toUpperCase() ==
                                       bssid!.toUpperCase()) {

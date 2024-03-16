@@ -7,7 +7,7 @@ class Validators {
 
   // Password:
   static final RegExp _passwordRegExp = RegExp(
-    r'^[0-9]',
+    r'^[a-zA-Z0-9]',
   );
 
   // 2 funciones:
