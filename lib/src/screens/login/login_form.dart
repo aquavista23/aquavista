@@ -1,4 +1,5 @@
 // ignore_for_file: unnecessary_null_comparison
+import 'package:aquavista/src/screens/login/forgot_password.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,6 +39,8 @@ class _LoginFormState extends State<LoginForm> {
     return state.isFormValid && isPopulated && !state.isSubmitting;
   }
 
+  bool _obscureText = true;
+
   @override
   void initState() {
     super.initState();
@@ -65,69 +68,92 @@ class _LoginFormState extends State<LoginForm> {
       }
     }, child: BlocBuilder<LoginBloc, LoginState>(
       builder: (context, state) {
-        return Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Form(
-            child: Column(
-              children: <Widget>[
-                const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    child: Image(image: AssetImage("assets/LOGO_text.png"))),
-                TextFormField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                      icon: Icon(Icons.email), labelText: 'Email'),
-                  keyboardType: TextInputType.emailAddress,
-                  autovalidateMode: AutovalidateMode.always,
-                  autocorrect: false,
-                  validator: (_) {
-                    return !state.isEmailValid ? 'Email Invalido' : null;
-                  },
-                ),
-                TextFormField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(
-                      icon: Icon(Icons.lock), labelText: 'Contraseña'),
-                  obscureText: true,
-                  autovalidateMode: AutovalidateMode.always,
-                  autocorrect: false,
-                  validator: (_) {
-                    return !state.isPasswordValid
-                        ? 'Contraseña Invalida'
-                        : null;
-                  },
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      // Tres botones:
-                      // LoginButton
-                      InitialButton(
-                          text: 'Login',
-                          onPressed: () {
-                            if (isLoginButtonEnabled(state)) {
-                              _onFormSubmitted();
-                            }
-                          }),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
-                      // GoogleLoginButton
-                      const GoogleLoginButton(),
-
-                      const SizedBox(
-                        height: 20.0,
-                      ),
-                      // CreateAccountButton
-                      CreateAccountButton(
-                        userRepository: _userRepository,
-                      ),
-                    ],
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Form(
+              child: Column(
+                children: <Widget>[
+                  const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      child: Image(image: AssetImage("assets/LOGO_text.png"))),
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: const InputDecoration(
+                        icon: Icon(Icons.email), labelText: 'Email'),
+                    keyboardType: TextInputType.emailAddress,
+                    autovalidateMode: AutovalidateMode.always,
+                    autocorrect: false,
+                    validator: (_) {
+                      return !state.isEmailValid ? 'Email Invalido' : null;
+                    },
                   ),
-                )
-              ],
+                  TextFormField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                        icon: const Icon(Icons.lock),
+                        labelText: 'Contraseña',
+                        suffixIcon: SizedBox(
+                          height: 20,
+                          child: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _obscureText = !_obscureText;
+                                });
+                              },
+                              icon: Icon((_obscureText)
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined)),
+                        )),
+                    obscureText: _obscureText,
+                    autovalidateMode: AutovalidateMode.always,
+                    autocorrect: false,
+                    validator: (_) {
+                      return !state.isPasswordValid
+                          ? 'Contraseña Invalida'
+                          : null;
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        // Tres botones:
+                        // LoginButton
+                        InitialButton(
+                            text: 'Login',
+                            onPressed: () {
+                              if (isLoginButtonEnabled(state)) {
+                                _onFormSubmitted();
+                              }
+                            }),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        // GoogleLoginButton
+                        const GoogleLoginButton(),
+
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        // CreateAccountButton
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CreateAccountButton(
+                              userRepository: _userRepository,
+                            ),
+                            ForgotPasswordButton(
+                              userRepository: _userRepository,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         );

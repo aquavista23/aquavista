@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 0.2.4+2
 
 environment:
   sdk: ">=2.17.6 <3.0.0"
@@ -34,23 +34,31 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  bloc: ^8.1.2
-  meta: ^1.7.0
-  intl: ^0.17.0
-  rxdart: ^0.27.7
-  equatable: ^2.0.5
-  auth_buttons: ^2.0.4
-  flutter_bloc: ^8.1.3
-  firebase_auth: ^4.3.0
-  firebase_core: ^2.8.0
-  path_provider: ^2.0.4
-  google_sign_in: ^6.0.2
-  esp_smartconfig: ^1.1.9
-  connectivity_plus: ^2.3.9 
-  # plugin_wifi_connect: ^1.0.2
-  network_info_plus: ^2.1.4+1
-  permission_handler: ^11.0.0
-  flutter_staggered_grid_view: ^0.6.0
+  bloc: ^8.1.2                                                    #segmentacion en Bloque
+  meta: ^1.7.0                                                    #constructores 
+  intl: ^0.17.0                                                   #formatos (fecha, numero, etc...)
+  http: ^0.13.5                                                   #Peticiones HTTP
+  rxdart: ^0.27.7                                                 #obtimizador de segmentacion en bloque
+  loggerx: ^1.3.4                                                 #logs en consola
+  fl_chart: ^0.62.0                                               #Graficas
+  wifi_iot: ^0.3.19                                               #Conectar con el dispositivo
+  equatable: ^2.0.5                                               #Simplifica los procesos de Comparasion 
+  app_settings: ^4.3.1                                            #Abrir configuraciones de ser necesario
+  auth_buttons: ^2.0.4                                            #boton para autentificacion con google de firebase
+  flutter_bloc: ^8.1.3                                            #estructuracion de segmentacion en bloque
+  firebase_auth: ^4.3.0                                           #Autenticacion con firebase
+  firebase_core: ^2.8.0                                           #conexion con Firebase
+  path_provider: ^2.0.4                                           #paquete para rutas
+  google_sign_in: ^6.0.2                                          #autentificacion con google de firebase
+  cloud_firestore: ^4.4.5                                         #base de datos para usuarios
+  connectivity_plus: ^2.3.9                                       #confirmacion de conexion a wifi
+  percent_indicator: ^4.2.3                                       #Grafica de porciento de Home
+  firebase_database: ^10.0.16                                     #obtener data de la base de datos
+  permission_handler: ^11.0.0                                     #solisitar permisos
+  firebase_messaging: ^14.3.0                                     #notificaciones Firebase
+  esptouch_smartconfig: ^1.1.0                                    #Conexion para ESP32
+  flutter_local_notifications: ^13.0.0                            #notificaciones Locales
+  
   
   
 dev_dependencies:
