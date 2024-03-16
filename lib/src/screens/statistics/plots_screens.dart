@@ -1,3 +1,4 @@
+import 'package:aquavista/src/util/snackbar.dart';
 import 'package:flutter/material.dart';
 
 import 'package:fl_chart/fl_chart.dart';
@@ -37,30 +38,44 @@ class _PlotsScreenState extends State<PlotsScreen> {
   void retrieveMeditionData(DateTime dia) {
     List<MeditionData> auxMeditionShow = [];
 
-    dbRef
-        .orderByChild("id")
-        .equalTo(widget.userShared?.uID ?? currentUser!.uid)
-        .onValue
-        .listen((data) {
-      DataSnapshot dataSnapshot = data.snapshot;
-      Map<dynamic, dynamic> values = dataSnapshot.value as Map;
-      values.forEach((key, values) {
-        meditionList.add(MeditionData.fromJson(values));
-      });
+    try {
+      dbRef
+          .orderByChild("id")
+          .equalTo(widget.userShared?.uID ?? currentUser!.uid)
+          .onValue
+          .listen((data) {
+        DataSnapshot dataSnapshot = data.snapshot;
+        if (dataSnapshot.exists) {
+          Map<dynamic, dynamic> values = dataSnapshot.value as Map;
+          values.forEach((key, values) {
+            meditionList.add(MeditionData.fromJson(values));
+          });
 
-      for (var i = 0; i < meditionList.length; i++) {
-        if (convertDate(meditionList[i].fecha!).difference(dia).inDays == 0) {
-          auxMeditionShow.add(meditionList[i]);
+          for (var i = 0; i < meditionList.length; i++) {
+            if (convertDate(meditionList[i].fecha!).difference(dia).inDays ==
+                0) {
+              auxMeditionShow.add(meditionList[i]);
+            }
+          }
+          auxMeditionShow.sort((a, b) {
+            return a.fecha!.compareTo(b.fecha!);
+          });
+        } else {
+          snackBarAlert(
+            text: 'No hay registros al ${formatDate.format(dia)}',
+            context: context,
+            color: Colors.amber,
+            duration: 2500,
+          );
         }
-      }
-      auxMeditionShow.sort((a, b) {
-        return a.fecha!.compareTo(b.fecha!);
+        setState(() {
+          meditionShow = auxMeditionShow;
+          filterDay = dia;
+        });
       });
-      setState(() {
-        meditionShow = auxMeditionShow;
-        filterDay = dia;
-      });
-    });
+    } on Exception catch (e) {
+      snackBarAlert(text: e.toString(), context: context, color: Colors.amber);
+    }
   }
 
   @override

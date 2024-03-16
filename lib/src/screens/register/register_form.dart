@@ -24,8 +24,11 @@ class _RegisterFormState extends State<RegisterForm> {
       TextEditingController();
 
   late RegisterBloc _registerBloc;
+  bool showPassword = false;
   bool validateName = false;
   bool validateFName = false;
+  bool validateConfPass = false;
+
   bool get isPopulated =>
       _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
 
@@ -41,7 +44,7 @@ class _RegisterFormState extends State<RegisterForm> {
     _fNameController.addListener(_onFNameChanged);
     _emailController.addListener(_onEmailChanged);
     _passwordController.addListener(_onPasswordChanged);
-    _confirmPasswordController.addListener(_onConfirmPasswordChanged);
+    // _confirmPasswordController.addListener(_onConfirmPasswordChanged);
   }
 
   @override
@@ -92,6 +95,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     icon: Icon(Icons.contacts_rounded),
                     labelText: 'Nombre',
                   ),
+                  textCapitalization: TextCapitalization.words,
                   keyboardType: TextInputType.name,
                   autocorrect: false,
                   autovalidateMode: AutovalidateMode.always,
@@ -119,6 +123,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     icon: Icon(Icons.contacts_rounded),
                     labelText: 'Apellido',
                   ),
+                  textCapitalization: TextCapitalization.words,
                   keyboardType: TextInputType.name,
                   autocorrect: false,
                   autovalidateMode: AutovalidateMode.always,
@@ -159,7 +164,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   controller: _passwordController,
                   decoration: const InputDecoration(
                       icon: Icon(Icons.lock), labelText: 'Contraseña'),
-                  obscureText: true,
+                  obscureText: !showPassword,
                   autocorrect: false,
                   autovalidateMode: AutovalidateMode.always,
                   validator: (_) {
@@ -175,23 +180,55 @@ class _RegisterFormState extends State<RegisterForm> {
                   decoration: const InputDecoration(
                       icon: Icon(Icons.lock),
                       labelText: 'Confirmar Contraseña'),
-                  obscureText: true,
+                  obscureText: !showPassword,
                   autocorrect: false,
                   autovalidateMode: AutovalidateMode.always,
                   validator: (_) {
-                    return (_confirmPasswordController.text.length ==
-                                _passwordController.text.length &&
-                            _confirmPasswordController.text !=
-                                _passwordController.text)
+                    return (validateConfPass ||
+                            ((_confirmPasswordController.text.length ==
+                                    _passwordController.text.length) &&
+                                (_confirmPasswordController.text !=
+                                    _passwordController.text)))
                         ? 'Contraseña No Coinciden'
                         : null;
                   },
-                ),
+                  onChanged: (value) {
+                    bool aux = false;
+                    if (value.isNotEmpty) {
+                      aux = false;
+                    } else {
+                      aux = true;
+                    }
 
+                    setState(() {
+                      validateConfPass = aux;
+                    });
+                  },
+                ),
+                const SizedBox(
+                  height: 15.0,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Mostrar Contraseña'),
+                    SizedBox(
+                      child: Checkbox(
+                        value: showPassword,
+                        onChanged: (value) {
+                          setState(() {
+                            showPassword = value ?? false;
+                          });
+                        },
+                      ),
+                    )
+                  ],
+                ),
                 const SizedBox(
                   height: 20.0,
                 ),
                 // Boton Registrar
+
                 InitialButton(
                     text: 'Registrar',
                     onPressed: () {
@@ -207,6 +244,9 @@ class _RegisterFormState extends State<RegisterForm> {
                                 context: context,
                                 text: 'Contraseñas no coinsiden',
                                 color: Colors.red);
+                            setState(() {
+                              validateConfPass = true;
+                            });
                           }
                         } else {
                           snackBarAlert(
@@ -251,10 +291,10 @@ class _RegisterFormState extends State<RegisterForm> {
     _registerBloc.add(PasswordChanged(password: _passwordController.text));
   }
 
-  void _onConfirmPasswordChanged() {
-    _registerBloc
-        .add(PasswordChanged(password: _confirmPasswordController.text));
-  }
+  // void _onConfirmPasswordChanged() {
+  //   _registerBloc
+  //       .add(PasswordChanged(password: _confirmPasswordController.text));
+  // }
 
   void _onFormSubmitted() {
     _registerBloc.add(Submitted(

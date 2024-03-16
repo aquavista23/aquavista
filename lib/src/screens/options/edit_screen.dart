@@ -145,6 +145,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           await userColection
                               .doc(currentUser!.uid)
                               .update({'apellido': _fNameController.text});
+
+                          snackBarAlert(
+                              text: 'Usuario Actualizado exitosamente!',
+                              context: context,
+                              color: Colors.red);
                         } catch (e) {
                           debugPrint(
                               '??????????????//updateName ${e.toString()}');
