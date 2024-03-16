@@ -59,13 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   .ref(DATABASE)
                   .orderByChild("id")
                   .equalTo(currentUser!.uid)
-                  .onValue
-                  .timeout(
-                const Duration(seconds: 5),
-                onTimeout: (sink) {
-                  sink.addError('Error');
-                },
-              ),
+                  .onValue,
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Padding(

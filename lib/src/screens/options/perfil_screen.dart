@@ -39,11 +39,13 @@ class _ProfilePageState extends State<ProfilePage> {
           IconButton(
             icon: const Icon(Icons.info_outlined),
             onPressed: () async {
-              // if (await showGenDialog(
-              //     context: context,
-              //     text: '¿Esta seguro que desea Cerrar Sesión?')) {
-              //   BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
-              // }
+              await infoUser(
+                  context: context,
+                  title: 'Información',
+                  text:
+                      'Desde aqui podra verificar su información ademas de editar el nombre y cambiar la contraseña',
+                  color: Colors.green,
+                  icon: const Icon(Icons.person));
             },
           )
         ],

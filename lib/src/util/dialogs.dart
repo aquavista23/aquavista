@@ -169,6 +169,62 @@ Future<bool> comfirmationAlert(
     ) ??
     false;
 
+Future<void> infoUser(
+        {required BuildContext context,
+        required String title,
+        required String text,
+        required Color color,
+        required Icon icon}) async =>
+    await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext mainContext) => alertDialogCustomize(
+        height: 250,
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Center(
+            child: ListView(
+              children: <Widget>[
+                const SizedBox(height: 5),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(title,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold)),
+                ),
+                const SizedBox(height: 5),
+                Center(
+                  child: ListTile(
+                    title: icon,
+                    subtitle: Text(
+                      text,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                SizedBox(
+                  width: 60,
+                  child: ElevatedButton(
+                    style: buttonStyle(radium: 30.0, color: Colors.green),
+                    child: const Text(
+                      "Aceptar",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    onPressed: () => Navigator.of(mainContext).pop(true),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
 Future<bool> confirmPass(BuildContext context, String title) async {
   final TextEditingController passController = TextEditingController();
 
