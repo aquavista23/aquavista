@@ -43,7 +43,9 @@ Future<bool> updateShare(DocumentSnapshot documentSnapshot,
   try {
     Map shared = documentSnapshot.data() as Map;
 
-    listID.addAll(shared['compartir'].keys);
+    for (var v = 0; v < shared['compartir'].keys; v++) {
+      listID.add(shared['compartir'].key[v].toString());
+    }
 
     for (var v = 0; v < listID.length; v++) {
       await userColection.doc(listID[v]).get().then((sharedSnapshot) async {
