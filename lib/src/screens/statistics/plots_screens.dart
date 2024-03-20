@@ -390,7 +390,7 @@ class _PlotsScreenState extends State<PlotsScreen> {
     for (var i = 0; i < meditionShow.length; i++) {
       if (meditionShow[i].flow != null && meditionShow[i].fecha != null) {
         DateTime fecha = meditionShow[i].fecha!;
-        double flow = meditionShow[i].flow!;
+        double flow = meditionShow[i].flow ?? 0.0 / 4000;
 
         spots.add(FlSpot(
           double.parse(
@@ -419,7 +419,7 @@ class _PlotsScreenState extends State<PlotsScreen> {
     for (var i = 0; i < meditionShow.length; i++) {
       if (meditionShow[i].turbidity != null && meditionShow[i].fecha != null) {
         DateTime fecha = meditionShow[i].fecha!;
-        double turbidity = meditionShow[i].turbidity!;
+        double turbidity = meditionShow[i].turbidity ?? 0.0 / 2000;
 
         spots.add(FlSpot(
           double.parse(

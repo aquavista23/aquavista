@@ -43,7 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   context: context,
                   title: 'Información',
                   text:
-                      'Desde aqui podra verificar su información ademas de editar el nombre y cambiar la contraseña',
+                      'Desde aqui podra verificar su información, además de editar el nombre y cambiar la contraseña',
                   color: Colors.green,
                   icon: const Icon(Icons.person));
             },

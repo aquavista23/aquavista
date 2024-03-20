@@ -6,7 +6,7 @@ import 'package:wifi_iot/wifi_iot.dart';
 
 import 'package:aquavista/src/util/style.dart';
 import 'package:aquavista/src/util/snackbar.dart';
-import 'package:aquavista/src/screens/options/select_device.dart';
+import 'package:aquavista/src/screens/options/select_device_wifi.dart';
 
 class WifiPage extends StatefulWidget {
   final String ssid;
@@ -133,7 +133,7 @@ class _WifiPageState extends State<WifiPage> {
                         // bool resp = await tryConecction(
                         //     widget.ssid, widget.bssid, password.text, security);
 
-                        if (password.text.length >= 8) {
+                        if (password.text.length >= 6) {
                           List<WifiNetwork> networks =
                               await enableDevices() ?? [];
                           await Navigator.of(context).push(MaterialPageRoute(

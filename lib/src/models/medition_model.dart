@@ -15,7 +15,7 @@ class MeditionData {
     id = json["id"] ?? '';
     turbidity = double.tryParse(json["turbidity"].toString()) ?? 0;
     flow = double.tryParse(json["flow"].toString()) ?? 0;
-    fecha = DateTime.tryParse(json["fecha"]);
+    fecha = DateTime.tryParse(json["fecha"])?.toLocal();
   }
 
   Map<String, dynamic> toMap() {

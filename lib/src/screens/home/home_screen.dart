@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, unused_local_variable
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -135,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   radius: 100.0,
                                   lineWidth: 10.0,
                                   percent:
-                                      ((lastRegister!.turbidity ?? 0.0) / 100),
+                                      ((lastRegister!.turbidity ?? 0.0) / 2000),
                                   linearGradient: const LinearGradient(colors: [
                                     Color(0xFFACC3F2),
                                     Color(0xFF044BD9)
@@ -150,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          '${lastRegister.turbidity!}%',
+                                          '${(lastRegister.turbidity ?? 0.0 / 2000).toString()}%',
                                           style: TextStyle(
                                               color: mainColor, fontSize: 35),
                                         ),
@@ -221,10 +221,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ],
                                     ),
                                     cardText(
-                                        lastRegister?.turbidity.toString() ??
-                                            'no Data',
+                                        (lastRegister?.turbidity ?? 0.0 / 2000)
+                                            .toString(),
                                         18,
-                                        color: (lastRegister!.flow! >= 55)
+                                        color: ((lastRegister?.turbidity ??
+                                                    0.0 / 2000) >=
+                                                55)
                                             ? Colors.green
                                             : Colors.red)
                                   ],
@@ -283,10 +285,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ],
                                     ),
                                     cardText(
-                                        lastRegister?.flow.toString() ??
-                                            'no Data',
+                                        (lastRegister?.flow ?? 0.0 / 4000)
+                                            .toString(),
                                         18.0,
-                                        color: (lastRegister!.turbidity! <= 40)
+                                        color: ((lastRegister?.flow ??
+                                                    0.0 / 4000) <=
+                                                40)
                                             ? Colors.red
                                             : Colors.green)
                                   ],

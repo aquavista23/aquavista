@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -87,7 +89,6 @@ class MessagingRepository {
       CollectionReference userColection =
           FirebaseFirestore.instance.collection('usuarios');
 
-      print('>>>>>>>>>>>>>>>>>>> ');
       await Firebase.initializeApp();
 
       await userColection
@@ -135,7 +136,6 @@ Future<void> handleBackgroundMessaging(RemoteMessage message) async {
   CollectionReference userColection =
       FirebaseFirestore.instance.collection('usuarios');
 
-  print('>>>>>>>>>>>>>>>>>>> ');
   await Firebase.initializeApp();
 
   await userColection
