@@ -2,6 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:aquavista/src/util/style.dart';
+
+import 'package:aquavista/src/util/snackbar.dart';
+
 // import 'package:flutter/src/foundation/key.dart';
 // import 'package:flutter/src/widgets/framework.dart';
 
@@ -122,6 +125,11 @@ class _CheckConecctionState extends State<CheckConecction> {
               ),
               onPressed: () async {
                 if (activeButton) {
+                  snackBarAlert(
+                      text: 'Dispositivo conectado correctamente',
+                      context: context,
+                      color: Colors.amber,
+                      duration: 2500);
                   Navigator.pushNamedAndRemoveUntil(
                       context, '/', (Route<dynamic> route) => false);
                 }
