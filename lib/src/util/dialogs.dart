@@ -644,7 +644,7 @@ Future<bool> confirmWiFiIoT(
                                       MaterialPageRoute(
                                           builder: (context) => CheckConecction(
                                                 validator:
-                                                    validator.padRight(5, '0'),
+                                                    validator.padLeft(5, '0'),
                                               )),
                                     );
                                   } else {

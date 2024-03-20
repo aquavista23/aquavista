@@ -137,7 +137,7 @@ class SelectDeviceState extends State<SelectDevice> {
                         allNetworks[index].ssid!,
                         await _firebaseMessaging.getToken(),
                         allNetworks[index].bssid!,
-                        widget.bssid,
+                        widget.ssid,
                         widget.password,
                         currentUser!.uid,
                         validator,
